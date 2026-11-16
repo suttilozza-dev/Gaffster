@@ -2,19 +2,23 @@ import { GAMEWEEK_DEFAULT, managerFor, squadFor } from './data'
 import { stadiumFor } from './stadium'
 import { benchText, makeTeam } from './team'
 import { designFor } from './kitDesign'
-import { toXY, type CardInput } from './pitch'
+import { toXY, type CardFormat, type CardInput } from './pitch'
 
 /** Formations to rotate through so the example cards do not all look alike. */
 export const SAMPLE_FORMATIONS = ['4-2-3-1', '4-3-3', '3-4-2-1', '4-4-2', '5-3-2', '4-1-4-1', '3-5-2', '4-4-1-1']
 
-/** The input for an example line-up card for one club: its default XI in its home kit, drawn like a real export. */
-export function sampleCardInput(club: string, formation = '4-2-3-1'): CardInput {
+/**
+ * The input for an example line-up card for one club: its default XI in its home kit, drawn like a real export.
+ * Wide formats (banner) use the landscape pitch; the others use the portrait pitch.
+ */
+export function sampleCardInput(club: string, formation = '4-2-3-1', format: CardFormat = 'portrait'): CardInput {
+  const orient = format === 'banner' ? 'landscape' : 'portrait'
   const t = makeTeam(club, formation)
   const squad = squadFor(club)
   const art = stadiumFor('matchdayxi', 'home')
   return {
     fixedSize: true,
-    orient: 'portrait',
+    orient,
     shape: 'full',
     versus: false,
     homeName: club,
@@ -26,11 +30,11 @@ export function sampleCardInput(club: string, formation = '4-2-3-1'): CardInput 
     gameweek: GAMEWEEK_DEFAULT,
     kind: 'Predicted XI',
     markers: t.slots.map((sl, idx) => {
-      const [x, y] = toXY(sl.u, sl.v, 'portrait')
+      const [x, y] = toXY(sl.u, sl.v, orient)
       const p = sl.pi != null ? squad[sl.pi] : undefined
       return { key: `h${idx}`, x, y, num: p?.num ?? null, name: p?.name ?? sl.role, colour: t.colour, ring: t.colour2, design: designFor(club, t.kit) }
     }),
-    format: 'portrait',
+    format,
     homeBench: benchText(t, squad),
     awayBench: '',
     stadium: art.shapes,
