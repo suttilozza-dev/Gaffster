@@ -4,7 +4,9 @@ Last updated: 16 November 2026
 
 ## The short version
 
-We keep as little about you as we can. We do not run adverts, we do not use tracking or analytics tools, and we do not sell your data. Whop handles sign-in and payment, so we never see your card details.
+We keep as little about you as we can. We do not show adverts on the site and we do not sell your data. Whop handles sign-in and payment, so we never see your card details.
+
+Whop, which hosts the site, can also measure visits and which links and adverts bring people to Gaffster. We only switch that on if you agree. You can change your choice at any time with Cookie settings at the bottom of every page.
 
 ## 1. Who is responsible
 
@@ -20,6 +22,7 @@ Gaffster is run by Laurence Sutcliffe, a sole trader based in New Zealand, who d
 | Whether a purchase was refunded | Whop | To end access after a refund |
 | Your email address and whatever you write | You, if you email us | To reply and to deal with your request |
 | Standard technical records, such as IP address and browser type | Our hosting provider | To keep the site secure and working |
+| Only if you agree to measurement: a random ID for your browser, the pages you visit, the page that sent you, your browser type, language and time zone, details of your device used to recognise it again, and a Facebook advertising ID if your browser already has one | Whop's measurement tool, on your device | To count visits and see which links and adverts bring people to Gaffster |
 
 When you pay, Whop sends us a payment notice. We keep only the payment reference, your Whop user ID and the plan.
 
@@ -31,9 +34,9 @@ We do not collect sensitive personal information, and we ask you not to send us 
 
 | Company | What it does for us | Where |
 | --- | --- | --- |
-| Whop | Sign-in, checkout, payments, refunds | United States |
+| Whop | Sign-in, checkout, payments, refunds, hosting the website, and measuring visits if you agree | United States |
 | Neon | Stores our database | Australia (Sydney) |
-| Cloudflare | Serves the website | Worldwide network |
+| Cloudflare | Runs the network Whop uses to serve the website | Worldwide network |
 | Proton | Receives the emails you send us | Switzerland |
 
 Whop also uses your information for its own purposes under its own privacy policy, which you agree to when you create a Whop account.
@@ -49,8 +52,9 @@ Gaffster is run from New Zealand and our database is in Australia. If you live i
 - **To carry out our contract with you:** sign-in, plans, payments, limits and refunds.
 - **Our legitimate interests:** keeping the site secure, preventing misuse, answering your emails.
 - **Legal duties:** keeping records the law requires, such as tax records.
+- **Your consent:** measuring visits and which links and adverts bring people to Gaffster. You can withdraw your consent at any time with Cookie settings at the bottom of every page.
 
-We do not use your information for marketing.
+We do not send you marketing messages.
 
 ## 6. How long we keep it
 
@@ -81,4 +85,4 @@ Sign-in is handled by Whop. Our database is password-protected and reached over 
 
 ## 10. Changes
 
-If we change how we use your information, we will update this page and its date. If we add analytics or advertising, we will say so here first and ask for your consent where the law requires it.
+If we change how we use your information, we will update this page and its date. If we add any other analytics or advertising tools, we will say so here first and ask for your consent where the law requires it.

@@ -22,6 +22,10 @@ export function ensureSchema() {
       created_at timestamptz NOT NULL DEFAULT now()
     )`
     await q`CREATE INDEX IF NOT EXISTS grants_user_idx ON grants (user_id)`
+    // Added 16 Nov 2026: which Whop plan variant was bought (to count Founder sales), and whether the payment is under a
+    // bank dispute (access is paused while it is). Existing rows get variant_id NULL and disputed false.
+    await q`ALTER TABLE grants ADD COLUMN IF NOT EXISTS variant_id text`
+    await q`ALTER TABLE grants ADD COLUMN IF NOT EXISTS disputed boolean NOT NULL DEFAULT false`
     // The free plan: FREE_PER_WEEK watermarked exports per signed-in account per week, counted here, not in the browser.
     await q`CREATE TABLE IF NOT EXISTS free_usage_week (
       user_id text NOT NULL,
@@ -64,7 +68,7 @@ export async function getEntitlement(userId: string): Promise<Entitlement> {
   // Owners need no payment record, so this check comes first and works even if the database is down.
   if (OWNER_USER_IDS.includes(userId)) return { tier: 'creator', remaining: null }
   await ensureSchema()
-  const rows = (await sql()`SELECT plan_key, images_total, images_used, expires_at FROM grants WHERE user_id = ${userId} AND NOT refunded`) as Row[]
+  const rows = (await sql()`SELECT plan_key, images_total, images_used, expires_at FROM grants WHERE user_id = ${userId} AND NOT refunded AND NOT disputed`) as Row[]
   const now = Date.now()
   const live = (r: Row) => !r.expires_at || new Date(r.expires_at).getTime() > now
   if (rows.some((r) => r.plan_key.startsWith('creator') && live(r))) return { tier: 'creator', remaining: null }
@@ -109,19 +113,37 @@ export async function spendOne(userId: string): Promise<boolean> {
   await ensureSchema()
   const r = await sql()`UPDATE grants SET images_used = images_used + 1 WHERE id = (
       SELECT id FROM grants
-      WHERE user_id = ${userId} AND NOT refunded AND images_total IS NOT NULL AND images_used < images_total
+      WHERE user_id = ${userId} AND NOT refunded AND NOT disputed AND images_total IS NOT NULL AND images_used < images_total
       ORDER BY (plan_key = 'trial') DESC, id
       LIMIT 1 FOR UPDATE SKIP LOCKED
     ) RETURNING id`
   return r.length > 0
 }
 
-export async function recordGrant(g: { paymentId: string; userId: string; planKey: string; images: number | null; days: number | null }) {
+export async function recordGrant(g: { paymentId: string; userId: string; planKey: string; variantId: string; images: number | null; days: number | null }) {
   await ensureSchema()
   const expires = g.days ? new Date(Date.now() + g.days * 864e5).toISOString() : null
-  await sql()`INSERT INTO grants (payment_id, user_id, plan_key, images_total, expires_at)
-    VALUES (${g.paymentId}, ${g.userId}, ${g.planKey}, ${g.images}, ${expires})
+  await sql()`INSERT INTO grants (payment_id, user_id, plan_key, variant_id, images_total, expires_at)
+    VALUES (${g.paymentId}, ${g.userId}, ${g.planKey}, ${g.variantId}, ${g.images}, ${expires})
     ON CONFLICT (payment_id) DO NOTHING`
+}
+
+/** Pause (or restore) access for a payment under a bank dispute. */
+export async function markDisputed(paymentId: string, disputed: boolean) {
+  await ensureSchema()
+  await sql()`UPDATE grants SET disputed = ${disputed} WHERE payment_id = ${paymentId}`
+}
+
+/**
+ * Founder Lifetime sales that still count towards the limit (refunded ones do not).
+ * Rows recorded before variant_id existed are counted if they are lifetime grants made after Founder went on sale
+ * (FOUNDER_ON_SALE_FROM); the retired 30-pound Unlimited plan, also a lifetime grant, was withdrawn at that point.
+ */
+export async function founderSold(founderVariant: string, onSaleFrom: string): Promise<number> {
+  await ensureSchema()
+  const r = (await sql()`SELECT count(*)::int AS n FROM grants WHERE plan_key = 'lifetime' AND NOT refunded
+    AND (variant_id = ${founderVariant} OR (variant_id IS NULL AND created_at >= ${onSaleFrom}))`) as { n: number }[]
+  return r[0]?.n ?? 0
 }
 
 export async function markRefunded(paymentId: string) {

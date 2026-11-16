@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { CLUBS, FORMATIONS, SITE_URL, managerFor, colourDistance, kitColours, type KitName, GAMEWEEK_DEFAULT, readableOn, squadFor, surname, type Player } from '#/lib/data'
+import { CLUBS, FORMATIONS, SITE_URL, managerFor, colourDistance, kitColours, type KitName, currentGameweek, readableOn, squadFor, surname, type Player } from '#/lib/data'
 import { FREE_PER_WEEK, PASS_PER_DAY } from '#/lib/config'
 import { CAPS, getAccess, markAnonUsed, spendExport, type Access } from '#/lib/credits'
 import { STADIUMS, stadiumFor, type StadiumId } from '#/lib/stadium'
@@ -62,7 +62,7 @@ export default function Board() {
   const [away, setAway] = useState<TeamState>(() => makeTeam('Liverpool', '4-3-3'))
   const [tab, setTab] = useState<Side>('home')
   const [sel, setSel] = useState<{ side: Side; idx: number } | null>(null)
-  const [gameweek, setGameweek] = useState(GAMEWEEK_DEFAULT)
+  const [gameweek, setGameweek] = useState(() => currentGameweek())
   const [kind, setKind] = useState('Predicted XI')
   const [present, setPresent] = useState(false)
   const [format, setFormat] = useState<CardFormat>('square')
@@ -611,7 +611,7 @@ export default function Board() {
               <div className="flex gap-2 flex-wrap items-center" role="group" aria-label="Stadium colours">
                 <span className="text-xs text-[#A9B4D0]">Colours</span>
                 {(['home', 'away', 'third'] as KitName[]).map((k) => (
-                  <button key={k} className="chip" aria-pressed={stadiumKit === k} disabled={k !== 'home' && caps.clubStadium !== 'all'} title={k !== 'home' && caps.clubStadium !== 'all' ? 'Colourways: Creator' : ''} onClick={() => setStadiumKit(k)}>{k}</button>
+                  <button key={k} className="chip" aria-pressed={stadiumKit === k} disabled={k !== 'home' && caps.clubStadium !== 'all'} title={k !== 'home' && caps.clubStadium !== 'all' ? 'Colourways: Plus, Creator or Founder' : ''} onClick={() => setStadiumKit(k)}>{k}</button>
                 ))}
               </div>
             )}
@@ -633,16 +633,16 @@ export default function Board() {
             <div className="flex gap-2 flex-wrap items-center" role="group" aria-label="Image size">
               <button className="chip" aria-pressed={format === 'square'} onClick={() => setFormat('square')}>Square</button>
               <button className="chip" aria-pressed={format === 'portrait'} onClick={() => setFormat('portrait')}>Portrait 4:5</button>
-              <button className="chip" aria-pressed={format === 'story'} disabled={!caps.extraFormats} title={caps.extraFormats ? '' : 'Story size: Unlimited or Creator'} onClick={() => setFormat('story')}>Story 9:16</button>
-              <button className="chip" aria-pressed={format === 'header'} disabled={!caps.extraFormats} title={caps.extraFormats ? '4:1 cover image, numbers only' : '4:1 cover: Unlimited or Creator'} onClick={() => { setFormat('header'); setOrient('landscape') }}>Header 4:1</button>
-              <button className="chip" aria-pressed={format === 'banner'} disabled={!caps.extraFormats} title={caps.extraFormats ? '' : 'Wide banner: Unlimited or Creator'} onClick={() => setFormat('banner')}>Banner 16:9</button>
+              <button className="chip" aria-pressed={format === 'story'} disabled={!caps.extraFormats} title={caps.extraFormats ? '' : 'Story size comes with any paid plan'} onClick={() => setFormat('story')}>Story 9:16</button>
+              <button className="chip" aria-pressed={format === 'header'} disabled={!caps.extraFormats} title={caps.extraFormats ? '4:1 cover image, numbers only' : '4:1 cover comes with any paid plan'} onClick={() => { setFormat('header'); setOrient('landscape') }}>Header 4:1</button>
+              <button className="chip" aria-pressed={format === 'banner'} disabled={!caps.extraFormats} title={caps.extraFormats ? '' : 'Wide banner comes with any paid plan'} onClick={() => setFormat('banner')}>Banner 16:9</button>
             </div>
-            {!caps.extraFormats && <p className="text-[11px] text-[#A9B4D0]">Story, Header and Banner sizes come with Unlimited or Creator.</p>}
+            {!caps.extraFormats && <p className="text-[11px] text-[#A9B4D0]">Story, Header and Banner sizes come with any paid plan.</p>}
           </div>
           <div className="flex flex-col gap-3">
             <label className="flex items-center gap-2 text-xs text-[#A9B4D0]">
               <input type="checkbox" disabled={!caps.transparent} checked={caps.transparent && transparent} onChange={(e) => setTransparent(e.target.checked)} style={{ width: 20, height: 20 }} />
-              Transparent background {caps.transparent ? '' : '(Unlimited or Creator)'}
+              Transparent background {caps.transparent ? '' : '(Plus, Creator or Founder)'}
             </label>
             <label className="text-xs text-[#A9B4D0]">Your handle or name on the image {caps.creatorBranding ? '' : '(Creator)'}
               <input className="field mt-1" value={handle} maxLength={28} disabled={!caps.creatorBranding} placeholder="@yourchannel" onChange={(e) => setHandle(e.target.value)} />

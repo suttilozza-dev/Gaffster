@@ -10,7 +10,7 @@ export const Route = createFileRoute('/')({ component: Home })
 const STEPS = [
   { n: '01', t: 'Pick your clubs', d: 'Set one team for a solo XI, or two for a Home v Away match-up. Any of the 20 Premier League clubs, 2026/27 squads.' },
   { n: '02', t: 'Drag it into shape', d: 'Choose a formation, then tap a marker and pick a player. Drag markers anywhere, give someone the armband and set the manager. Your subs sit in the dugout.' },
-  { n: '03', t: 'Share it', d: 'Your first image is free with no sign-up. Copy it into a post, tap Share on your phone, or download a card in square, 4:5, story or header sizes.' },
+  { n: '03', t: 'Share it', d: 'Your first image is free with no sign-up. Copy it into a post, tap Share on your phone, or download a card in square or 4:5 size. Paid plans add story, header and banner sizes.' },
 ]
 
 function Home() {

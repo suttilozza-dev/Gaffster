@@ -1,4 +1,4 @@
-import { GAMEWEEK_DEFAULT, managerFor, squadFor } from './data'
+import { currentGameweek, managerFor, squadFor } from './data'
 import { stadiumFor } from './stadium'
 import { benchText, makeTeam } from './team'
 import { designFor } from './kitDesign'
@@ -27,7 +27,7 @@ export function sampleCardInput(club: string, formation = '4-2-3-1', format: Car
     awayForm: '',
     homeColour: t.colour,
     awayColour: '#19E6D1',
-    gameweek: GAMEWEEK_DEFAULT,
+    gameweek: currentGameweek(),
     kind: 'Predicted XI',
     markers: t.slots.map((sl, idx) => {
       const [x, y] = toXY(sl.u, sl.v, orient)

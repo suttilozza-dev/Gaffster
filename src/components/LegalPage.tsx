@@ -35,11 +35,27 @@ function blocks(md: string): ReactNode[] {
     else if (first.startsWith('## ')) out.push(<h2 key={k} className="font-display font-bold text-2xl mt-8 mb-2">{first.slice(3)}</h2>)
     else if (first.startsWith('|')) {
       const [head, , ...rows] = lines
+      const heads = cells(head)
+      // Phones: one card per row, each value under its column name. Wider screens: a normal table.
       out.push(
-        <div key={k} className="overflow-x-auto my-4">
+        <div key={`${k}-cards`} className="sm:hidden my-4 flex flex-col gap-3">
+          {rows.map((r, ri) => (
+            <dl key={ri} className="panel p-3 text-sm m-0">
+              {cells(r).map((c, i) => (
+                <div key={i} className={i ? 'mt-2' : ''}>
+                  <dt className="font-display tracking-wide text-xs text-[#F5F7FF]">{heads[i]}</dt>
+                  <dd className="m-0 text-[#A9B4D0]">{inline(c)}</dd>
+                </div>
+              ))}
+            </dl>
+          ))}
+        </div>,
+      )
+      out.push(
+        <div key={k} className="hidden sm:block overflow-x-auto my-4">
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr>{cells(head).map((c, i) => <th key={i} className="text-left font-display tracking-wide p-2 border-b border-[rgba(245,247,255,.2)]">{inline(c)}</th>)}</tr>
+              <tr>{heads.map((c, i) => <th key={i} className="text-left font-display tracking-wide p-2 border-b border-[rgba(245,247,255,.2)]">{inline(c)}</th>)}</tr>
             </thead>
             <tbody>
               {rows.map((r, ri) => (

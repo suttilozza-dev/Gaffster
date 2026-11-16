@@ -1,11 +1,27 @@
 import squadsJson from '../data/squads.json'
 import managersJson from '../data/managers.json'
+import gameweeksJson from '../data/gameweeks.json'
 import { ALL_KITS, kitLook } from './kitDesign'
 
 export type Pos = 'GK' | 'DEF' | 'MID' | 'FWD'
 export type Player = { num: number | null; name: string; pos: Pos }
 
-export const GAMEWEEK_DEFAULT = '10'
+/**
+ * The gameweek a line-up is most likely for: the current one while its matches are being played, otherwise the next one.
+ * A gameweek counts as running from its first fixture day until three days later (Friday to Monday), so during an
+ * international break the board already shows the next gameweek. Dates: src/data/gameweeks.json (UK dates).
+ * Before the season this gives 1, after the last gameweek 38. The board still lets people type any gameweek.
+ */
+export function currentGameweek(now = new Date()): string {
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now)
+  const starts = gameweeksJson.starts
+  for (let i = 0; i < starts.length; i++) {
+    const end = new Date(starts[i] + 'T00:00:00Z')
+    end.setUTCDate(end.getUTCDate() + 3)
+    if (today <= end.toISOString().slice(0, 10)) return String(i + 1)
+  }
+  return String(starts.length)
+}
 export const SITE_URL = 'gaffster.app'
 
 type RawSquad = Record<Pos, [number | null, string][]>

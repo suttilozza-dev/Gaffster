@@ -4,6 +4,8 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import appCss from '../styles.css?url'
 import { SiteFooter } from '#/components/SiteFooter'
+import { ConsentBanner } from '#/components/ConsentBanner'
+import { CONSENT_HEAD_SCRIPT } from '#/lib/consent'
 
 
 export const Route = createRootRoute({
@@ -47,6 +49,8 @@ export const Route = createRootRoute({
       { name: 'twitter:image', content: 'https://gaffster.app/brand/social-preview.png' },
     ],
     scripts: [
+      // Must come before Whop's platform pixel script (which Whop adds at the end of <head>): see src/lib/consent.ts
+      { children: CONSENT_HEAD_SCRIPT },
       {
         type: 'application/ld+json',
         children: JSON.stringify({
@@ -84,6 +88,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         {children}
         <SiteFooter />
+        <ConsentBanner />
         <TanStackDevtools
           config={{
             position: 'bottom-right',
