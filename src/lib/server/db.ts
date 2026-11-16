@@ -26,6 +26,17 @@ export function ensureSchema() {
     // bank dispute (access is paused while it is). Existing rows get variant_id NULL and disputed false.
     await q`ALTER TABLE grants ADD COLUMN IF NOT EXISTS variant_id text`
     await q`ALTER TABLE grants ADD COLUMN IF NOT EXISTS disputed boolean NOT NULL DEFAULT false`
+    // Saved line-ups (Plus, Creator and Founder). `data` is the board's own encoded line-up, the same format as a share link.
+    await q`CREATE TABLE IF NOT EXISTS saved_lineups (
+      id bigserial PRIMARY KEY,
+      user_id text NOT NULL,
+      name text NOT NULL,
+      gameweek text,
+      data text NOT NULL,
+      created_at timestamptz NOT NULL DEFAULT now(),
+      updated_at timestamptz NOT NULL DEFAULT now(),
+      UNIQUE (user_id, name)
+    )`
     // The free plan: FREE_PER_WEEK watermarked exports per signed-in account per week, counted here, not in the browser.
     await q`CREATE TABLE IF NOT EXISTS free_usage_week (
       user_id text NOT NULL,
@@ -149,4 +160,32 @@ export async function founderSold(founderVariant: string, onSaleFrom: string): P
 export async function markRefunded(paymentId: string) {
   await ensureSchema()
   await sql()`UPDATE grants SET refunded = true WHERE payment_id = ${paymentId}`
+}
+
+/** How many line-ups one account can keep. */
+export const LINEUP_LIMIT = 20
+
+export type SavedLineup = { id: number; name: string; gameweek: string | null; data: string; updated_at: string }
+
+export async function listLineups(userId: string): Promise<SavedLineup[]> {
+  await ensureSchema()
+  return (await sql()`SELECT id, name, gameweek, data, updated_at FROM saved_lineups WHERE user_id = ${userId} ORDER BY updated_at DESC`) as SavedLineup[]
+}
+
+/** Save a line-up under a name. The same name replaces the earlier save. 'full' when the account already has LINEUP_LIMIT others. */
+export async function saveLineup(userId: string, name: string, gameweek: string, data: string): Promise<'saved' | 'full'> {
+  await ensureSchema()
+  const others = (await sql()`SELECT count(*)::int AS n FROM saved_lineups WHERE user_id = ${userId} AND name <> ${name}`) as { n: number }[]
+  if ((others[0]?.n ?? 0) >= LINEUP_LIMIT) {
+    const same = (await sql()`SELECT 1 FROM saved_lineups WHERE user_id = ${userId} AND name = ${name}`) as unknown[]
+    if (same.length === 0) return 'full'
+  }
+  await sql()`INSERT INTO saved_lineups (user_id, name, gameweek, data) VALUES (${userId}, ${name}, ${gameweek}, ${data})
+    ON CONFLICT (user_id, name) DO UPDATE SET gameweek = EXCLUDED.gameweek, data = EXCLUDED.data, updated_at = now()`
+  return 'saved'
+}
+
+export async function deleteLineup(userId: string, id: number) {
+  await ensureSchema()
+  await sql()`DELETE FROM saved_lineups WHERE user_id = ${userId} AND id = ${id}`
 }

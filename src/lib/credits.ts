@@ -19,16 +19,17 @@ export type Caps = {
   clubStadium: 'none' | 'one' | 'all'
   creatorBranding: boolean // own handle instead of Gaffster branding
   present: boolean // hidden controls panel for streaming
+  saveLineups: boolean // save named line-ups to the account
 }
 
 export const CAPS: Record<Tier, Caps> = {
-  free: { watermark: true, unlimited: false, extraFormats: false, transparent: false, clubStadium: 'none', creatorBranding: false, present: false },
-  pass: { watermark: false, unlimited: true, extraFormats: true, transparent: false, clubStadium: 'one', creatorBranding: false, present: false },
-  trial: { watermark: false, unlimited: false, extraFormats: false, transparent: false, clubStadium: 'one', creatorBranding: false, present: false },
-  credits: { watermark: false, unlimited: false, extraFormats: false, transparent: false, clubStadium: 'none', creatorBranding: false, present: false },
-  plus: { watermark: false, unlimited: true, extraFormats: true, transparent: true, clubStadium: 'all', creatorBranding: false, present: false },
-  lifetime: { watermark: false, unlimited: true, extraFormats: true, transparent: true, clubStadium: 'all', creatorBranding: false, present: false },
-  creator: { watermark: false, unlimited: true, extraFormats: true, transparent: true, clubStadium: 'all', creatorBranding: true, present: true },
+  free: { watermark: true, unlimited: false, extraFormats: false, transparent: false, clubStadium: 'none', creatorBranding: false, present: false, saveLineups: false },
+  pass: { watermark: false, unlimited: true, extraFormats: true, transparent: false, clubStadium: 'one', creatorBranding: false, present: false, saveLineups: false },
+  trial: { watermark: false, unlimited: false, extraFormats: false, transparent: false, clubStadium: 'one', creatorBranding: false, present: false, saveLineups: false },
+  credits: { watermark: false, unlimited: false, extraFormats: false, transparent: false, clubStadium: 'none', creatorBranding: false, present: false, saveLineups: false },
+  plus: { watermark: false, unlimited: true, extraFormats: true, transparent: true, clubStadium: 'all', creatorBranding: false, present: false, saveLineups: true },
+  lifetime: { watermark: false, unlimited: true, extraFormats: true, transparent: true, clubStadium: 'all', creatorBranding: false, present: false, saveLineups: true },
+  creator: { watermark: false, unlimited: true, extraFormats: true, transparent: true, clubStadium: 'all', creatorBranding: true, present: true, saveLineups: true },
 }
 
 export const TIER_LABEL: Record<Tier, string> = { free: 'Free', pass: 'Gameweek Pass', trial: 'Trial', credits: 'Credit pack', plus: 'Plus', lifetime: 'Founder Lifetime', creator: 'Creator' }

@@ -19,6 +19,7 @@ Gaffster is run by Laurence Sutcliffe, a sole trader based in New Zealand, who d
 | Your Whop user ID and display name | Whop, when you sign in | To know who is signed in and which plan you have |
 | Your plan, a payment reference, and when it expires | Whop, when you pay | To give you what you paid for |
 | How many images you have made this week or today | Our own count | To apply plan limits |
+| Line-ups you save to your account (on Plus, Creator or Founder), with the name you give each one | You, when you press Save | To let you open them again on any device |
 | Whether a purchase was refunded | Whop | To end access after a refund |
 | Your email address and whatever you write | You, if you email us | To reply and to deal with your request |
 | Standard technical records, such as IP address and browser type | Our hosting provider | To keep the site secure and working |
@@ -27,7 +28,7 @@ Gaffster is run by Laurence Sutcliffe, a sole trader based in New Zealand, who d
 
 When you pay, Whop sends us a payment notice. We keep only the payment reference, your Whop user ID and the plan.
 
-The line-ups you build stay in your browser. We do not store them.
+The line-ups you build stay in your browser, and your browser remembers the last one for next time. We only store a line-up if you save it to your account on Plus, Creator or Founder.
 
 We do not collect sensitive personal information, and we ask you not to send us any.
 
@@ -60,6 +61,7 @@ We do not send you marketing messages.
 ## 6. How long we keep it
 
 - Account and usage records: for as long as you use Gaffster, then up to 12 months.
+- Saved line-ups: until you delete them, or until we delete your account records.
 - Purchase records: 7 years, because tax law requires records to be kept.
 - Emails: up to 12 months after the matter is closed.
 
