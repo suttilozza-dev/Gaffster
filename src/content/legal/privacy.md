@@ -31,9 +31,9 @@ We do not collect sensitive personal information, and we ask you not to send us 
 
 | Company | What it does for us | Where |
 | --- | --- | --- |
-| Whop | Sign-in, checkout, payments, refunds | United States |
+| Whop | Sign-in, checkout, payments, refunds, and hosting the website | United States |
 | Neon | Stores our database | Australia (Sydney) |
-| Cloudflare | Serves the website | Worldwide network |
+| Cloudflare | Runs the network Whop uses to serve the website | Worldwide network |
 | Proton | Receives the emails you send us | Switzerland |
 
 Whop also uses your information for its own purposes under its own privacy policy, which you agree to when you create a Whop account.

@@ -14,6 +14,7 @@ Gaffster uses only the cookies and browser storage it needs to work. There are n
 | mdxi_oauth | Cookie | Used for a few minutes while you sign in with Whop, to check the sign-in really came from you. | Deleted when sign-in finishes |
 | mdxi_anon_used | Browser storage | Remembers that you have used your free first image. | Until you clear your browser storage |
 | mdxi_resume | Browser storage (this tab only) | Holds your line-up while you sign in, so you do not lose it. | Removed when you return, or when you close the tab |
+| tsr-scroll-restoration-v1_3 | Browser storage (this tab only) | Remembers where you had scrolled to on a page. | Until you close the tab |
 
 ## Whop's cookies
 
@@ -21,7 +22,7 @@ When you sign in or pay, you are on Whop's pages. Whop sets its own cookies ther
 
 ## Turning cookies off
 
-You can block or delete cookies in your browser settings. If you block ours, you can still make your first image, but you will not be able to stay signed in.
+You can block or delete cookies in your browser settings. If you block ours, you will not be able to sign in or stay signed in. If your browser also blocks storage, you will not be able to make your free first image either.
 
 ## If this changes
 
