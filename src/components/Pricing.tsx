@@ -11,7 +11,7 @@ function Buy({ id, children, primary }: { id: string; children: React.ReactNode;
   )
 }
 
-function Card({ title, price, per, sub, lines, children, active, badge }: { title: string; price: string; per?: string; sub?: string; lines: string[]; children?: React.ReactNode; active?: boolean; badge?: string }) {
+function Card({ title, price, per, sub, lines, later, children, active, badge }: { title: string; price: string; per?: string; sub?: string; lines: string[]; later?: string; children?: React.ReactNode; active?: boolean; badge?: string }) {
   return (
     <div className="panel p-4 flex flex-col gap-2 relative" style={active || badge ? { borderColor: '#C8FF3D', borderWidth: 1.5 } : undefined}>
       {badge && (
@@ -26,12 +26,17 @@ function Card({ title, price, per, sub, lines, children, active, badge }: { titl
       <ul className="text-sm text-[#A9B4D0] list-disc pl-5 flex flex-col gap-1 flex-1">
         {lines.map((l) => <li key={l}>{l}</li>)}
       </ul>
+      {later && (
+        <p className="text-xs text-[#A9B4D0]">
+          <span className="font-display tracking-widest text-[#F5F7FF]">Coming later:</span> {later}
+        </p>
+      )}
       {children && <div className="flex gap-2 flex-wrap mt-2">{children}</div>}
     </div>
   )
 }
 
-/** Plans. Items marked "soon" are not built yet. Monthly and yearly are both shown and both buyable on the card. */
+/** Plans. Features that are not built yet go in `later` (shown as "Coming later"), never in the included list. Monthly and yearly are both shown and both buyable on the card. */
 export function Pricing({ current }: { current?: Tier }) {
   return (
     <section aria-label="Plans" className="mt-6">
@@ -63,7 +68,8 @@ export function Pricing({ current }: { current?: Tier }) {
           sub={`Season Pass: about £2.50 a month. Or ${PLUS.monthly.label} ${PLUS.monthly.note}.`}
           badge="Most popular"
           active={current === 'plus'}
-          lines={['Unlimited images with no watermark, for as long as you subscribe', 'Transparent background', 'Every stadium and colourway', 'Saved line-ups and gameweek history (soon)']}
+          lines={['Unlimited images with no watermark, for as long as you subscribe', 'Transparent background', 'Every stadium and colourway']}
+          later="Saved line-ups and gameweek history"
         >
           <Buy id={PLUS.yearly.id} primary>{PLUS.yearly.label} a year · save 50%</Buy>
           <Buy id={PLUS.monthly.id}>{PLUS.monthly.label} a month</Buy>
@@ -74,7 +80,8 @@ export function Pricing({ current }: { current?: Tier }) {
           per={CREATOR.yearly.note}
           sub={`About £6.67 a month. Or ${CREATOR.monthly.label} ${CREATOR.monthly.note}.`}
           active={current === 'creator'}
-          lines={['Everything in Plus', 'Your handle on the image, Gaffster branding removed', 'Present mode: hidden controls for streaming', 'Bulk export, reveal videos, templates and coaching markup (soon)', 'Join now and keep this price as features arrive']}
+          lines={['Everything in Plus', 'Your handle on the image, Gaffster branding removed', 'Present mode: hidden controls for streaming', 'Join now and keep this price as features arrive']}
+          later="Bulk export, reveal videos, templates and coaching markup"
         >
           <Buy id={CREATOR.yearly.id} primary>{CREATOR.yearly.label} a year · save 33%</Buy>
           <Buy id={CREATOR.monthly.id}>{CREATOR.monthly.label} a month</Buy>
@@ -84,6 +91,7 @@ export function Pricing({ current }: { current?: Tier }) {
         <div>
           <div className="font-display tracking-widest text-sm">Founder Lifetime · {FOUNDER.label} {FOUNDER.note}</div>
           <p className="text-sm text-[#A9B4D0]">Plus for life, with every future Plus feature. Only the first {FOUNDER.cap} people can have it.</p>
+          <p className="text-sm text-[#A9B4D0]">Lifetime means for as long as Gaffster runs. It is not a promise that Gaffster will run forever.</p>
         </div>
         <Buy id={FOUNDER.id} primary>Become a Founder</Buy>
       </div>

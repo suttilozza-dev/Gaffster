@@ -12,6 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as BrandRouteImport } from './routes/brand'
+import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RefundsRouteImport } from './routes/refunds'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ApiAccessRouteImport } from './routes/api/access'
 import { Route as ApiSpendRouteImport } from './routes/api/spend'
 import { Route as ApiAuthCallbackRouteImport } from './routes/api/auth/callback'
@@ -32,6 +36,26 @@ const BoardRoute = BoardRouteImport.update({
 const BrandRoute = BrandRouteImport.update({
   id: '/brand',
   path: '/brand',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundsRoute = RefundsRouteImport.update({
+  id: '/refunds',
+  path: '/refunds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAccessRoute = ApiAccessRouteImport.update({
@@ -69,6 +93,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/board': typeof BoardRoute
   '/brand': typeof BrandRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
+  '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
   '/api/spend': typeof ApiSpendRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
@@ -80,6 +108,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/board': typeof BoardRoute
   '/brand': typeof BrandRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
+  '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
   '/api/spend': typeof ApiSpendRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
@@ -92,6 +124,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/board': typeof BoardRoute
   '/brand': typeof BrandRoute
+  '/cookies': typeof CookiesRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
+  '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
   '/api/spend': typeof ApiSpendRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
@@ -105,6 +141,10 @@ export interface FileRouteTypes {
     | '/'
     | '/board'
     | '/brand'
+    | '/cookies'
+    | '/privacy'
+    | '/refunds'
+    | '/terms'
     | '/api/access'
     | '/api/spend'
     | '/api/auth/callback'
@@ -116,6 +156,10 @@ export interface FileRouteTypes {
     | '/'
     | '/board'
     | '/brand'
+    | '/cookies'
+    | '/privacy'
+    | '/refunds'
+    | '/terms'
     | '/api/access'
     | '/api/spend'
     | '/api/auth/callback'
@@ -127,6 +171,10 @@ export interface FileRouteTypes {
     | '/'
     | '/board'
     | '/brand'
+    | '/cookies'
+    | '/privacy'
+    | '/refunds'
+    | '/terms'
     | '/api/access'
     | '/api/spend'
     | '/api/auth/callback'
@@ -139,6 +187,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BoardRoute: typeof BoardRoute
   BrandRoute: typeof BrandRoute
+  CookiesRoute: typeof CookiesRoute
+  PrivacyRoute: typeof PrivacyRoute
+  RefundsRoute: typeof RefundsRoute
+  TermsRoute: typeof TermsRoute
   ApiAccessRoute: typeof ApiAccessRoute
   ApiSpendRoute: typeof ApiSpendRoute
   ApiAuthCallbackRoute: typeof ApiAuthCallbackRoute
@@ -168,6 +220,34 @@ declare module '@tanstack/react-router' {
       path: '/brand'
       fullPath: '/brand'
       preLoaderRoute: typeof BrandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refunds': {
+      id: '/refunds'
+      path: '/refunds'
+      fullPath: '/refunds'
+      preLoaderRoute: typeof RefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/access': {
@@ -219,6 +299,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BoardRoute: BoardRoute,
   BrandRoute: BrandRoute,
+  CookiesRoute: CookiesRoute,
+  PrivacyRoute: PrivacyRoute,
+  RefundsRoute: RefundsRoute,
+  TermsRoute: TermsRoute,
   ApiAccessRoute: ApiAccessRoute,
   ApiSpendRoute: ApiSpendRoute,
   ApiAuthCallbackRoute: ApiAuthCallbackRoute,
