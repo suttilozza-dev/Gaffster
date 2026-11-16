@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { CLUBS, FORMATIONS, SITE_URL, managerFor, colourDistance, kitColours, type KitName, GAMEWEEK_DEFAULT, readableOn, squadFor, surname, type Player } from '#/lib/data'
+import { CLUBS, FORMATIONS, SITE_URL, managerFor, colourDistance, kitColours, type KitName, currentGameweek, readableOn, squadFor, surname, type Player } from '#/lib/data'
 import { FREE_PER_WEEK, PASS_PER_DAY } from '#/lib/config'
 import { CAPS, getAccess, markAnonUsed, spendExport, type Access } from '#/lib/credits'
 import { STADIUMS, stadiumFor, type StadiumId } from '#/lib/stadium'
@@ -62,7 +62,7 @@ export default function Board() {
   const [away, setAway] = useState<TeamState>(() => makeTeam('Liverpool', '4-3-3'))
   const [tab, setTab] = useState<Side>('home')
   const [sel, setSel] = useState<{ side: Side; idx: number } | null>(null)
-  const [gameweek, setGameweek] = useState(GAMEWEEK_DEFAULT)
+  const [gameweek, setGameweek] = useState(() => currentGameweek())
   const [kind, setKind] = useState('Predicted XI')
   const [present, setPresent] = useState(false)
   const [format, setFormat] = useState<CardFormat>('square')

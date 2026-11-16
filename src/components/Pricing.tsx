@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { CHECKOUT_LINKS, CREATOR, FOUNDER, FREE_PER_WEEK, PASS, PASS_PER_DAY, PLUS } from '#/lib/config'
 import { TIER_LABEL, type Tier } from '#/lib/credits'
 
@@ -37,7 +38,22 @@ function Card({ title, price, per, sub, lines, later, children, active, badge }:
 }
 
 /** Plans. Features that are not built yet go in `later` (shown as "Coming later"), never in the included list. Monthly and yearly are both shown and both buyable on the card. */
+/** Has the Founder limit been reached? Unknown (null) until the server answers; the button stays on if it cannot answer. */
+function useFounderSoldOut(): boolean | null {
+  const [soldOut, setSoldOut] = useState<boolean | null>(null)
+  useEffect(() => {
+    let dead = false
+    fetch('/api/founder')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { soldOut?: boolean } | null) => { if (!dead && d && typeof d.soldOut === 'boolean') setSoldOut(d.soldOut) })
+      .catch(() => {})
+    return () => { dead = true }
+  }, [])
+  return soldOut
+}
+
 export function Pricing({ current }: { current?: Tier }) {
+  const founderSoldOut = useFounderSoldOut()
   return (
     <section aria-label="Plans" className="mt-6">
       <h2 className="font-display text-xl font-bold mb-3">Plans{current ? <span className="text-sm text-[#A9B4D0]"> · you are on {TIER_LABEL[current]}</span> : null}</h2>
@@ -90,10 +106,14 @@ export function Pricing({ current }: { current?: Tier }) {
       <div className="panel p-4 mt-4 flex items-center justify-between gap-3 flex-wrap" style={{ borderColor: 'rgba(200,255,61,0.5)' }}>
         <div>
           <div className="font-display tracking-widest text-sm">Founder Lifetime · {FOUNDER.label} {FOUNDER.note}</div>
-          <p className="text-sm text-[#A9B4D0]">Plus for life, with every future Plus feature. Only the first {FOUNDER.cap} people can have it.</p>
+          <p className="text-sm text-[#A9B4D0]">Plus for life, with every future Plus feature. {founderSoldOut ? `All ${FOUNDER.cap} Founder places have gone.` : `Only the first ${FOUNDER.cap} people can have it.`}</p>
           <p className="text-sm text-[#A9B4D0]">Lifetime means for as long as Gaffster runs. It is not a promise that Gaffster will run forever.</p>
         </div>
-        <Buy id={FOUNDER.id} primary>Become a Founder</Buy>
+        {founderSoldOut ? (
+          <button className="btn btn-ghost" disabled>Sold out</button>
+        ) : (
+          <Buy id={FOUNDER.id} primary>Become a Founder</Buy>
+        )}
       </div>
     </section>
   )

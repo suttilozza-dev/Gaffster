@@ -15,7 +15,12 @@ export const CREATOR = {
   monthly: { id: 'creator-monthly', label: '£9.99', note: 'a month' },
   yearly: { id: 'creator-yearly', label: '£79.99', note: 'a year' },
 } as const
-export const FOUNDER = { id: 'founder', label: '£79.99', note: 'once, first 500 buyers', cap: 500 } as const
+/**
+ * Founder Lifetime. Sales are counted in the database (/api/founder); at `cap` the button turns into "Sold out".
+ * `variant` is the Whop plan id; `onSaleFrom` is when it went on sale (older lifetime grants are the retired 30-pound plan).
+ * Also set a 500 stock limit on the product in Whop, so the checkout link itself stops selling.
+ */
+export const FOUNDER = { id: 'founder', label: '£79.99', note: 'once, first 500 buyers', cap: 500, variant: 'plan_UCraiZ98hmIZm', onSaleFrom: '2026-11-04T20:38:00Z' } as const
 
 /**
  * Whop checkout links (GBP variants on the matchday-xi account). Empty = the button shows "soon" and cannot be clicked.
