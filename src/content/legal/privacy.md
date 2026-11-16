@@ -1,6 +1,6 @@
 # Privacy notice
 
-Last updated: 16 November 2026
+Last updated: 17 November 2026
 
 ## The short version
 
@@ -22,6 +22,7 @@ Gaffster is run by Laurence Sutcliffe, a sole trader based in New Zealand, who d
 | Whether a purchase was refunded | Whop | To end access after a refund |
 | Your email address and whatever you write | You, if you email us | To reply and to deal with your request |
 | Standard technical records, such as IP address and browser type | Our hosting provider | To keep the site secure and working |
+| The page you are on, your browser type, and how quickly the page loaded. No cookies are used for this. | Cloudflare's page speed tool, on every page | To count visits and keep the site fast |
 | Only if you agree to measurement: a random ID for your browser, the pages you visit, the page that sent you, your browser type, language and time zone, details of your device used to recognise it again, and a Facebook advertising ID if your browser already has one | Whop's measurement tool, on your device | To count visits and see which links and adverts bring people to Gaffster |
 
 When you pay, Whop sends us a payment notice. We keep only the payment reference, your Whop user ID and the plan.
@@ -36,7 +37,7 @@ We do not collect sensitive personal information, and we ask you not to send us 
 | --- | --- | --- |
 | Whop | Sign-in, checkout, payments, refunds, hosting the website, and measuring visits if you agree | United States |
 | Neon | Stores our database | Australia (Sydney) |
-| Cloudflare | Runs the network Whop uses to serve the website | Worldwide network |
+| Cloudflare | Runs the network Whop uses to serve the website, and measures page speed and visits without cookies | Worldwide network |
 | Proton | Receives the emails you send us | Switzerland |
 
 Whop also uses your information for its own purposes under its own privacy policy, which you agree to when you create a Whop account.
@@ -50,7 +51,7 @@ Gaffster is run from New Zealand and our database is in Australia. If you live i
 ## 5. Our legal reasons (UK and Europe)
 
 - **To carry out our contract with you:** sign-in, plans, payments, limits and refunds.
-- **Our legitimate interests:** keeping the site secure, preventing misuse, answering your emails.
+- **Our legitimate interests:** keeping the site secure, preventing misuse, answering your emails, and measuring page speed and visits without cookies.
 - **Legal duties:** keeping records the law requires, such as tax records.
 - **Your consent:** measuring visits and which links and adverts bring people to Gaffster. You can withdraw your consent at any time with Cookie settings at the bottom of every page.
 
