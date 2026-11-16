@@ -18,6 +18,7 @@ import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ApiAccessRouteImport } from './routes/api/access'
 import { Route as ApiFounderRouteImport } from './routes/api/founder'
+import { Route as ApiLineupsRouteImport } from './routes/api/lineups'
 import { Route as ApiSpendRouteImport } from './routes/api/spend'
 import { Route as ApiAuthCallbackRouteImport } from './routes/api/auth/callback'
 import { Route as ApiAuthLoginRouteImport } from './routes/api/auth/login'
@@ -69,6 +70,11 @@ const ApiFounderRoute = ApiFounderRouteImport.update({
   path: '/api/founder',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiLineupsRoute = ApiLineupsRouteImport.update({
+  id: '/api/lineups',
+  path: '/api/lineups',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSpendRoute = ApiSpendRouteImport.update({
   id: '/api/spend',
   path: '/api/spend',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
   '/api/founder': typeof ApiFounderRoute
+  '/api/lineups': typeof ApiLineupsRoute
   '/api/spend': typeof ApiSpendRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
   '/api/founder': typeof ApiFounderRoute
+  '/api/lineups': typeof ApiLineupsRoute
   '/api/spend': typeof ApiSpendRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
   '/api/founder': typeof ApiFounderRoute
+  '/api/lineups': typeof ApiLineupsRoute
   '/api/spend': typeof ApiSpendRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/api/access'
     | '/api/founder'
+    | '/api/lineups'
     | '/api/spend'
     | '/api/auth/callback'
     | '/api/auth/login'
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/api/access'
     | '/api/founder'
+    | '/api/lineups'
     | '/api/spend'
     | '/api/auth/callback'
     | '/api/auth/login'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/api/access'
     | '/api/founder'
+    | '/api/lineups'
     | '/api/spend'
     | '/api/auth/callback'
     | '/api/auth/login'
@@ -205,6 +217,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   ApiAccessRoute: typeof ApiAccessRoute
   ApiFounderRoute: typeof ApiFounderRoute
+  ApiLineupsRoute: typeof ApiLineupsRoute
   ApiSpendRoute: typeof ApiSpendRoute
   ApiAuthCallbackRoute: typeof ApiAuthCallbackRoute
   ApiAuthLoginRoute: typeof ApiAuthLoginRoute
@@ -277,6 +290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiFounderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/lineups': {
+      id: '/api/lineups'
+      path: '/api/lineups'
+      fullPath: '/api/lineups'
+      preLoaderRoute: typeof ApiLineupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/spend': {
       id: '/api/spend'
       path: '/api/spend'
@@ -325,6 +345,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   ApiAccessRoute: ApiAccessRoute,
   ApiFounderRoute: ApiFounderRoute,
+  ApiLineupsRoute: ApiLineupsRoute,
   ApiSpendRoute: ApiSpendRoute,
   ApiAuthCallbackRoute: ApiAuthCallbackRoute,
   ApiAuthLoginRoute: ApiAuthLoginRoute,

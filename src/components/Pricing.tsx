@@ -84,8 +84,8 @@ export function Pricing({ current }: { current?: Tier }) {
           sub={`Season Pass: about £2.50 a month. Or ${PLUS.monthly.label} ${PLUS.monthly.note}.`}
           badge="Most popular"
           active={current === 'plus'}
-          lines={['Unlimited images with no watermark, for as long as you subscribe', 'Transparent background', 'Every stadium and colourway']}
-          later="Saved line-ups and gameweek history"
+          lines={['Unlimited images with no watermark, for as long as you subscribe', 'Transparent background', 'Every stadium and colourway', 'Save up to 20 named line-ups to your account and open them on any device']}
+          later="Gameweek history"
         >
           <Buy id={PLUS.yearly.id} primary>{PLUS.yearly.label} a year · save 50%</Buy>
           <Buy id={PLUS.monthly.id}>{PLUS.monthly.label} a month</Buy>

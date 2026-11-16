@@ -7,6 +7,7 @@ import { CLUB_GROUNDS } from '#/lib/clubStadiums'
 import { BENCH_MAX, autoFill, benchText, defaultBench, makeTeam, normalise, type Slot, type TeamState } from '#/lib/team'
 import { KIT_SCALE, designFor, isBusy, kitInner } from '#/lib/kitDesign'
 import { Pricing } from '#/components/Pricing'
+import { deleteLineupFromAccount, fetchLineups, saveLineupToAccount, type LineupsResult, type SavedLineup } from '#/lib/lineups'
 import { Disclaimer } from '#/components/Disclaimer'
 import { LINE_PATHS, SHIRT_PATH, backFont, SPOTS, fromXY, linesTransform, renderCard, toXY, viewBoxFor, type CardFormat, type LabelPos, type MarkerStyle, type Orient, type PlacedMarker, type Shape_ as Shape } from '#/lib/pitch'
 
@@ -24,6 +25,9 @@ function decode(h: string): Saved | null {
     return null
   }
 }
+
+/** This browser's last line-up (localStorage), put back when the board is opened again. */
+const LINEUP_KEY = 'mdxi_lineup'
 
 type Net = 'x' | 'facebook' | 'reddit' | 'instagram'
 const NET_LABEL: Record<Net, string> = { x: 'X', facebook: 'Facebook', reddit: 'Reddit', instagram: 'Instagram' }
@@ -84,6 +88,15 @@ export default function Board() {
   const refreshAccess = () => void getAccess().then(setAccess)
   useEffect(refreshAccess, [])
   const caps = access?.caps ?? CAPS.free
+  // Saved line-ups on the account (paid plans). null = not loaded yet.
+  const [lineups, setLineups] = useState<SavedLineup[] | null>(null)
+  const [saveName, setSaveName] = useState('')
+  const [lineupMsg, setLineupMsg] = useState('')
+  const canSave = !!access?.signedIn && caps.saveLineups
+  useEffect(() => {
+    if (!canSave) return
+    fetchLineups().then((r) => { if (r.ok) setLineups(r.lineups) })
+  }, [canSave])
   const [stadiumKit, setStadiumKit] = useState<KitName>('home')
   const art = useMemo(() => stadiumFor(stadium, stadiumKit), [stadium, stadiumKit])
   const stadiumShapes = art.shapes
@@ -92,24 +105,9 @@ export default function Board() {
   const [busy, setBusy] = useState(false)
   const svgRef = useRef<SVGSVGElement>(null)
   const dragRef = useRef<{ side: Side; idx: number } | null>(null)
-  // restore from share link (phones default to the portrait pitch)
-  useEffect(() => {
-    let raw = location.hash.length >= 8 ? location.hash.slice(1) : ''
-    if (!raw) {
-      // coming back from "Sign in with Whop": put the line-up back as it was
-      try {
-        raw = sessionStorage.getItem('mdxi_resume') ?? ''
-        sessionStorage.removeItem('mdxi_resume')
-      } catch {
-        /* storage blocked: start fresh */
-      }
-    }
-    if (!raw) {
-      if (window.innerWidth < 700) setOrient('portrait')
-      return
-    }
-    const s = decode(raw)
-    if (!s || !CLUBS.includes(s.hc) || !FORMATIONS[s.hf]) return
+  /** Put a saved line-up (share link, sign-in return, remembered or account save) on the board. False if it is unusable. */
+  const applySaved = (s: Saved | null): boolean => {
+    if (!s || !CLUBS.includes(s.hc) || !FORMATIONS[s.hf]) return false
     const build = (club: string, f: string, colour: string, colour2: string | undefined, bench: number[] | undefined, pis: (number | null)[], ps: [number, number][]): TeamState => {
       const t = makeTeam(club, f)
       t.colour = colour
@@ -134,6 +132,33 @@ export default function Board() {
     setShape(s.v ? 'full' : s.s)
     setGameweek(s.gw)
     setKind(s.k === 'Dream XI' ? 'My XI' : s.k)
+    return true
+  }
+
+  // Restore, in this order: a share link, the line-up from before "Sign in with Whop", then the last line-up this browser
+  // remembers (with the gameweek moved on to the current one). Phones with nothing to restore default to the portrait pitch.
+  useEffect(() => {
+    let raw = location.hash.length >= 8 ? location.hash.slice(1) : ''
+    let remembered = false
+    if (!raw) {
+      try {
+        raw = sessionStorage.getItem('mdxi_resume') ?? ''
+        sessionStorage.removeItem('mdxi_resume')
+      } catch {
+        /* storage blocked: start fresh */
+      }
+    }
+    if (!raw) {
+      try {
+        raw = localStorage.getItem(LINEUP_KEY) ?? ''
+        remembered = !!raw
+      } catch {
+        /* storage blocked: start fresh */
+      }
+    }
+    const s = raw ? decode(raw) : null
+    if (s && remembered) s.gw = currentGameweek()
+    if (!applySaved(s) && window.innerWidth < 700) setOrient('portrait')
   }, [])
 
   // two teams on one pitch must be told apart: if the shirts clash, give the away side the brand cyan (or lime)
@@ -417,6 +442,25 @@ export default function Board() {
     }
     return s
   }
+  // Remember the line-up in this browser shortly after every change (skipping the very first render, which is still the
+  // default board while the restore above is being applied).
+  const lineupCode = encode(buildSaved())
+  const firstRemember = useRef(true)
+  useEffect(() => {
+    if (firstRemember.current) {
+      firstRemember.current = false
+      return
+    }
+    const t = setTimeout(() => {
+      try {
+        localStorage.setItem(LINEUP_KEY, lineupCode)
+      } catch {
+        /* storage blocked: nothing is remembered */
+      }
+    }, 400)
+    return () => clearTimeout(t)
+  }, [lineupCode])
+
   /** Go to Whop sign-in, remembering the line-up so it is still here when they come back. */
   const goSignIn = () => {
     try {
@@ -425,6 +469,31 @@ export default function Board() {
       /* storage blocked: the line-up will not be restored */
     }
     location.href = '/api/auth/login'
+  }
+
+  const defaultSaveName = () => `${versus ? `${home.club} v ${away.club}` : home.club} · GW${gameweek}`
+  const lineupError = (r: LineupsResult) =>
+    r.ok ? '' : r.error === 'full' ? 'You have 20 saved line-ups. Delete one to save another.' : r.error === 'signed_out' ? 'Sign in again to save.' : r.error === 'plan' ? 'Saving line-ups comes with Plus, Creator or Founder.' : 'Could not save just now. Try again.'
+  const saveToAccount = async () => {
+    const name = (saveName.trim() || defaultSaveName()).slice(0, 60)
+    setLineupMsg('Saving…')
+    const r = await saveLineupToAccount(name, gameweek, encode(buildSaved()))
+    if (r.ok) {
+      setLineups(r.lineups)
+      setSaveName('')
+      setLineupMsg(`Saved as "${name}".`)
+    } else setLineupMsg(lineupError(r))
+  }
+  const loadFromAccount = (l: SavedLineup) => {
+    setLineupMsg(applySaved(decode(l.data)) ? `Loaded "${l.name}".` : 'That line-up could not be loaded.')
+  }
+  const removeFromAccount = async (l: SavedLineup) => {
+    if (!confirm(`Delete "${l.name}"?`)) return
+    const r = await deleteLineupFromAccount(l.id)
+    if (r.ok) {
+      setLineups(r.lineups)
+      setLineupMsg(`Deleted "${l.name}".`)
+    } else setLineupMsg(lineupError(r))
   }
   const siteUrl = `https://${SITE_URL}`
   const postText = `${versus ? `${home.club} v ${away.club}` : home.club} ${kind} (${versus ? home.formation + ' v ' + away.formation : home.formation}), gameweek ${gameweek}. Build yours free:`
@@ -551,6 +620,37 @@ export default function Board() {
           </div>
           {teamBlock('home')}
           {versus && teamBlock('away')}
+        </section>
+        <section className="flex flex-col gap-3" aria-label="Saved line-ups">
+          <span className="set-title">Saved line-ups</span>
+          {canSave ? (
+            <>
+              <div className="flex gap-2">
+                <input className="field flex-1 min-w-0" value={saveName} maxLength={60} placeholder={defaultSaveName()} aria-label="Name for this line-up" onChange={(e) => setSaveName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') saveToAccount() }} />
+                <button className="btn btn-lime" onClick={saveToAccount}>Save</button>
+              </div>
+              {lineupMsg && <p className="text-xs text-[#A9B4D0]" aria-live="polite">{lineupMsg}</p>}
+              {lineups && lineups.length > 0 ? (
+                <ul className="flex flex-col gap-1.5 m-0 p-0 list-none">
+                  {lineups.map((l) => (
+                    <li key={l.id} className="flex items-center gap-2">
+                      <button className="player-row flex-1 min-w-0 text-left" onClick={() => loadFromAccount(l)} title="Load this line-up">
+                        <span className="text-sm truncate">{l.name}</span>
+                        <span className="ml-auto text-[10px] text-[#A9B4D0]">{l.gameweek ? `GW${l.gameweek}` : ''}</span>
+                      </button>
+                      <button className="chip" style={{ minWidth: 44 }} aria-label={`Delete ${l.name}`} onClick={() => removeFromAccount(l)}>✕</button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                lineups && <p className="text-xs text-[#A9B4D0]">Nothing saved yet. Save up to 20 line-ups; they load on any device you sign in on.</p>
+              )}
+            </>
+          ) : (
+            <p className="text-xs text-[#A9B4D0]">
+              This browser keeps your last line-up for next time. To save named line-ups to your account and open them on any device, get Plus, Creator or Founder.
+            </p>
+          )}
         </section>
         <section className="flex flex-col gap-3" aria-label="Match and pitch">
           <span className="set-title">Match</span>
