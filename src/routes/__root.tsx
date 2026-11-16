@@ -5,8 +5,6 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import appCss from '../styles.css?url'
 import { SiteFooter } from '#/components/SiteFooter'
 
-// Whop Pixel (ads attribution), exact snippet from Whop. Scope: biz_1DA89Rn6FlaXXk.
-const WHOP_PIXEL = `!function(w,d,s,u,n,a,b){if(w[n])return;a=w[n]={q:[],t:+new Date,s:[],o:u,track:function(){a.q.push([+new Date].concat([].slice.call(arguments)))},setScope:function(){a.s=[].slice.call(arguments).filter(function(x){return typeof x==="string"});a.q.push([+new Date,"setScope"].concat(a.s))},scope:function(){var c=[].slice.call(arguments);return{track:function(){a.q.push([+new Date].concat([].slice.call(arguments)).concat([{__scope:c}]))}}}};b=d.createElement(s);b.async=1;b.src=u+"/s.js";d.getElementsByTagName(s)[0].parentNode.insertBefore(b,d.getElementsByTagName(s)[0])}(window,document,"script","https://t.whop.tw","whop");whop.setScope("biz_1DA89Rn6FlaXXk");whop.track("page");`
 
 export const Route = createRootRoute({
   head: () => ({
@@ -49,7 +47,6 @@ export const Route = createRootRoute({
       { name: 'twitter:image', content: 'https://gaffster.app/brand/social-preview.png' },
     ],
     scripts: [
-      { children: WHOP_PIXEL },
       {
         type: 'application/ld+json',
         children: JSON.stringify({
@@ -69,12 +66,6 @@ export const Route = createRootRoute({
       { rel: 'manifest', href: '/manifest.webmanifest' },
       { rel: 'icon', type: 'image/png', href: '/brand/favicon.png' },
       { rel: 'apple-touch-icon', href: '/brand/apple-touch-icon.png' },
-      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap',
-      },
       {
         rel: 'stylesheet',
         href: appCss,
