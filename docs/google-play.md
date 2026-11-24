@@ -29,6 +29,13 @@ their home screen from a browser.
      outside OneDrive). Without them you cannot publish updates;
    - `assetlinks.json`: send its fingerprint (the long `sha256_cert_fingerprints` value) to Build.
 
+### Fingerprints in public/.well-known/assetlinks.json
+
+| Key | SHA-256 fingerprint | Added |
+| --- | --- | --- |
+| Upload key (PWABuilder, 24 Nov 2026; CN=Laurence Sutcliffe, O=Gaffster, C=NZ) | `9E:1F:67:C7:13:51:E0:E3:69:50:9F:F8:CE:84:6F:46:08:BE:0C:93:FD:11:03:87:1C:26:79:90:DE:98:DE:09` | Yes |
+| Google Play app signing key (Play Console → App integrity) | not known yet | No: add it once the app is in Play Console |
+
 ## 2. Test on your phone
 
 Copy the `.apk` to your Android phone and open it (allow "install unknown apps" for your file manager when asked).
