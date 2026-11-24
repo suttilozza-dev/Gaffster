@@ -17,6 +17,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ApiAccessRouteImport } from './routes/api/access'
+import { Route as ApiAnonImageRouteImport } from './routes/api/anon-image'
 import { Route as ApiFounderRouteImport } from './routes/api/founder'
 import { Route as ApiLineupsRouteImport } from './routes/api/lineups'
 import { Route as ApiSpendRouteImport } from './routes/api/spend'
@@ -65,6 +66,11 @@ const ApiAccessRoute = ApiAccessRouteImport.update({
   path: '/api/access',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAnonImageRoute = ApiAnonImageRouteImport.update({
+  id: '/api/anon-image',
+  path: '/api/anon-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiFounderRoute = ApiFounderRouteImport.update({
   id: '/api/founder',
   path: '/api/founder',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/refunds': typeof RefundsRoute
   '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
+  '/api/anon-image': typeof ApiAnonImageRoute
   '/api/founder': typeof ApiFounderRoute
   '/api/lineups': typeof ApiLineupsRoute
   '/api/spend': typeof ApiSpendRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/refunds': typeof RefundsRoute
   '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
+  '/api/anon-image': typeof ApiAnonImageRoute
   '/api/founder': typeof ApiFounderRoute
   '/api/lineups': typeof ApiLineupsRoute
   '/api/spend': typeof ApiSpendRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/refunds': typeof RefundsRoute
   '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
+  '/api/anon-image': typeof ApiAnonImageRoute
   '/api/founder': typeof ApiFounderRoute
   '/api/lineups': typeof ApiLineupsRoute
   '/api/spend': typeof ApiSpendRoute
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/refunds'
     | '/terms'
     | '/api/access'
+    | '/api/anon-image'
     | '/api/founder'
     | '/api/lineups'
     | '/api/spend'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/refunds'
     | '/terms'
     | '/api/access'
+    | '/api/anon-image'
     | '/api/founder'
     | '/api/lineups'
     | '/api/spend'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/refunds'
     | '/terms'
     | '/api/access'
+    | '/api/anon-image'
     | '/api/founder'
     | '/api/lineups'
     | '/api/spend'
@@ -216,6 +228,7 @@ export interface RootRouteChildren {
   RefundsRoute: typeof RefundsRoute
   TermsRoute: typeof TermsRoute
   ApiAccessRoute: typeof ApiAccessRoute
+  ApiAnonImageRoute: typeof ApiAnonImageRoute
   ApiFounderRoute: typeof ApiFounderRoute
   ApiLineupsRoute: typeof ApiLineupsRoute
   ApiSpendRoute: typeof ApiSpendRoute
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAccessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/anon-image': {
+      id: '/api/anon-image'
+      path: '/api/anon-image'
+      fullPath: '/api/anon-image'
+      preLoaderRoute: typeof ApiAnonImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/founder': {
       id: '/api/founder'
       path: '/api/founder'
@@ -344,6 +364,7 @@ const rootRouteChildren: RootRouteChildren = {
   RefundsRoute: RefundsRoute,
   TermsRoute: TermsRoute,
   ApiAccessRoute: ApiAccessRoute,
+  ApiAnonImageRoute: ApiAnonImageRoute,
   ApiFounderRoute: ApiFounderRoute,
   ApiLineupsRoute: ApiLineupsRoute,
   ApiSpendRoute: ApiSpendRoute,
