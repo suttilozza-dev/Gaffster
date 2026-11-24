@@ -7,6 +7,7 @@ import { CLUB_GROUNDS } from '#/lib/clubStadiums'
 import { BENCH_MAX, autoFill, benchText, defaultBench, makeTeam, normalise, type Slot, type TeamState } from '#/lib/team'
 import { KIT_SCALE, designFor, isBusy, kitInner } from '#/lib/kitDesign'
 import { Pricing } from '#/components/Pricing'
+import { inApp, useInApp } from '#/lib/appMode'
 import { deleteLineupFromAccount, fetchLineups, saveLineupToAccount, type LineupsResult, type SavedLineup } from '#/lib/lineups'
 import { Disclaimer } from '#/components/Disclaimer'
 import { LINE_PATHS, SHIRT_PATH, backFont, SPOTS, fromXY, linesTransform, renderCard, toXY, viewBoxFor, type CardFormat, type LabelPos, type MarkerStyle, type Orient, type PlacedMarker, type Shape_ as Shape } from '#/lib/pitch'
@@ -88,6 +89,9 @@ export default function Board() {
   const refreshAccess = () => void getAccess().then(setAccess)
   useEffect(refreshAccess, [])
   const caps = access?.caps ?? CAPS.free
+  // Inside the Google Play app nothing may point people towards buying: hints say only what the plan does not include.
+  const app = useInApp()
+  const NOT_IN_PLAN = 'Not included in your plan'
   // Saved line-ups on the account (paid plans). null = not loaded yet.
   const [lineups, setLineups] = useState<SavedLineup[] | null>(null)
   const [saveName, setSaveName] = useState('')
@@ -343,10 +347,10 @@ export default function Board() {
       : reason === 'unavailable'
         ? 'We could not check your plan just now. Try again in a moment.'
         : access?.tier === 'pass'
-          ? `You have used today's ${PASS_PER_DAY} Gameweek Pass images. They reset at midnight UK time, or go Plus for unlimited images.`
+          ? `You have used today's ${PASS_PER_DAY} Gameweek Pass images. They reset at midnight UK time${inApp() ? '.' : ', or go Plus for unlimited images.'}`
           : access?.tier === 'free'
-            ? `You have used your ${FREE_PER_WEEK} free images for this week. They come back on Monday, or pick a plan below.`
-            : 'You have used all your images on this plan. Pick a plan below to keep exporting.'
+            ? `You have used your ${FREE_PER_WEEK} free images for this week. They come back on Monday${inApp() ? '.' : ', or pick a plan below.'}`
+            : `You have used all your images on this plan.${inApp() ? '' : ' Pick a plan below to keep exporting.'}`
 
   const signOut = async () => {
     await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' })
@@ -473,7 +477,7 @@ export default function Board() {
 
   const defaultSaveName = () => `${versus ? `${home.club} v ${away.club}` : home.club} · GW${gameweek}`
   const lineupError = (r: LineupsResult) =>
-    r.ok ? '' : r.error === 'full' ? 'You have 20 saved line-ups. Delete one to save another.' : r.error === 'signed_out' ? 'Sign in again to save.' : r.error === 'plan' ? 'Saving line-ups comes with Plus, Creator or Founder.' : 'Could not save just now. Try again.'
+    r.ok ? '' : r.error === 'full' ? 'You have 20 saved line-ups. Delete one to save another.' : r.error === 'signed_out' ? 'Sign in again to save.' : r.error === 'plan' ? (inApp() ? 'Saving line-ups is not included in your plan.' : 'Saving line-ups comes with Plus, Creator or Founder.') : 'Could not save just now. Try again.'
   const saveToAccount = async () => {
     const name = (saveName.trim() || defaultSaveName()).slice(0, 60)
     setLineupMsg('Saving…')
@@ -647,9 +651,12 @@ export default function Board() {
               )}
             </>
           ) : (
-            <p className="text-xs text-[#A9B4D0]">
-              This browser keeps your last line-up for next time. To save named line-ups to your account and open them on any device, get Plus, Creator or Founder.
-            </p>
+            <>
+              <p className="text-xs text-[#A9B4D0] app-hide">
+                This browser keeps your last line-up for next time. To save named line-ups to your account and open them on any device, get Plus, Creator or Founder.
+              </p>
+              <p className="text-xs text-[#A9B4D0] app-only">This app keeps your last line-up for next time.</p>
+            </>
           )}
         </section>
         <section className="flex flex-col gap-3" aria-label="Match and pitch">
@@ -697,7 +704,7 @@ export default function Board() {
             <label className="text-xs text-[#A9B4D0]">Stadium
               <select className="field mt-1" value={stadium} onChange={(e) => setStadium(e.target.value as StadiumId)}>
                 {STADIUMS.map((st) => <option key={st.id} value={st.id}>{st.name}</option>)}
-                <optgroup label={caps.clubStadium === 'none' ? 'Club grounds (paid plans)' : 'Club grounds'}>
+                <optgroup label={caps.clubStadium === 'none' ? (app ? 'Club grounds (not in your plan)' : 'Club grounds (paid plans)') : 'Club grounds'}>
                   {Object.entries(CLUB_GROUNDS).map(([club, g]) => (
                     <option key={club} value={`club:${club}`} disabled={caps.clubStadium === 'none'}>{club}: {g.ground}</option>
                   ))}
@@ -711,7 +718,7 @@ export default function Board() {
               <div className="flex gap-2 flex-wrap items-center" role="group" aria-label="Stadium colours">
                 <span className="text-xs text-[#A9B4D0]">Colours</span>
                 {(['home', 'away', 'third'] as KitName[]).map((k) => (
-                  <button key={k} className="chip" aria-pressed={stadiumKit === k} disabled={k !== 'home' && caps.clubStadium !== 'all'} title={k !== 'home' && caps.clubStadium !== 'all' ? 'Colourways: Plus, Creator or Founder' : ''} onClick={() => setStadiumKit(k)}>{k}</button>
+                  <button key={k} className="chip" aria-pressed={stadiumKit === k} disabled={k !== 'home' && caps.clubStadium !== 'all'} title={k !== 'home' && caps.clubStadium !== 'all' ? (app ? NOT_IN_PLAN : 'Colourways: Plus, Creator or Founder') : ''} onClick={() => setStadiumKit(k)}>{k}</button>
                 ))}
               </div>
             )}
@@ -733,18 +740,18 @@ export default function Board() {
             <div className="flex gap-2 flex-wrap items-center" role="group" aria-label="Image size">
               <button className="chip" aria-pressed={format === 'square'} onClick={() => setFormat('square')}>Square</button>
               <button className="chip" aria-pressed={format === 'portrait'} onClick={() => setFormat('portrait')}>Portrait 4:5</button>
-              <button className="chip" aria-pressed={format === 'story'} disabled={!caps.extraFormats} title={caps.extraFormats ? '' : 'Story size comes with any paid plan'} onClick={() => setFormat('story')}>Story 9:16</button>
-              <button className="chip" aria-pressed={format === 'header'} disabled={!caps.extraFormats} title={caps.extraFormats ? '4:1 cover image, numbers only' : '4:1 cover comes with any paid plan'} onClick={() => { setFormat('header'); setOrient('landscape') }}>Header 4:1</button>
-              <button className="chip" aria-pressed={format === 'banner'} disabled={!caps.extraFormats} title={caps.extraFormats ? '' : 'Wide banner comes with any paid plan'} onClick={() => setFormat('banner')}>Banner 16:9</button>
+              <button className="chip" aria-pressed={format === 'story'} disabled={!caps.extraFormats} title={caps.extraFormats ? '' : app ? NOT_IN_PLAN : 'Story size comes with any paid plan'} onClick={() => setFormat('story')}>Story 9:16</button>
+              <button className="chip" aria-pressed={format === 'header'} disabled={!caps.extraFormats} title={caps.extraFormats ? '4:1 cover image, numbers only' : app ? NOT_IN_PLAN : '4:1 cover comes with any paid plan'} onClick={() => { setFormat('header'); setOrient('landscape') }}>Header 4:1</button>
+              <button className="chip" aria-pressed={format === 'banner'} disabled={!caps.extraFormats} title={caps.extraFormats ? '' : app ? NOT_IN_PLAN : 'Wide banner comes with any paid plan'} onClick={() => setFormat('banner')}>Banner 16:9</button>
             </div>
-            {!caps.extraFormats && <p className="text-[11px] text-[#A9B4D0]">Story, Header and Banner sizes come with any paid plan.</p>}
+            {!caps.extraFormats && <p className="text-[11px] text-[#A9B4D0]">{app ? 'Story, Header and Banner sizes are not included in your plan.' : 'Story, Header and Banner sizes come with any paid plan.'}</p>}
           </div>
           <div className="flex flex-col gap-3">
             <label className="flex items-center gap-2 text-xs text-[#A9B4D0]">
               <input type="checkbox" disabled={!caps.transparent} checked={caps.transparent && transparent} onChange={(e) => setTransparent(e.target.checked)} style={{ width: 20, height: 20 }} />
-              Transparent background {caps.transparent ? '' : '(Plus, Creator or Founder)'}
+              Transparent background {caps.transparent ? '' : app ? '(not in your plan)' : '(Plus, Creator or Founder)'}
             </label>
-            <label className="text-xs text-[#A9B4D0]">Your handle or name on the image {caps.creatorBranding ? '' : '(Creator)'}
+            <label className="text-xs text-[#A9B4D0]">Your handle or name on the image {caps.creatorBranding ? '' : app ? '(not in your plan)' : '(Creator)'}
               <input className="field mt-1" value={handle} maxLength={28} disabled={!caps.creatorBranding} placeholder="@yourchannel" onChange={(e) => setHandle(e.target.value)} />
             </label>
           </div>
@@ -842,7 +849,7 @@ export default function Board() {
               )}
             </div>
             <div className="flex gap-2 flex-wrap">
-              <button className="btn btn-ghost" disabled={!caps.present} title={caps.present ? '' : 'Hidden controls for streaming: Creator plan'} onClick={() => setPresent((p) => !p)}>{present ? 'Show controls' : caps.present ? 'Present' : 'Present · Creator'}</button>
+              <button className="btn btn-ghost" disabled={!caps.present} title={caps.present ? '' : app ? NOT_IN_PLAN : 'Hidden controls for streaming: Creator plan'} onClick={() => setPresent((p) => !p)}>{present ? 'Show controls' : caps.present || app ? 'Present' : 'Present · Creator'}</button>
               <button className="btn btn-ghost" onClick={doCopy} disabled={busy}>Copy image</button>
               <button className="btn btn-lime" onClick={doDownload} disabled={busy}>Download</button>
             </div>
@@ -992,7 +999,7 @@ export default function Board() {
             })}
           </div>
 
-          <Pricing current={access?.tier} />
+          <div className="app-hide"><Pricing current={access?.tier} /></div>
         </div>
         {!present && <aside className="order-4" aria-label="Squad list">{SquadList}</aside>}
       </div>

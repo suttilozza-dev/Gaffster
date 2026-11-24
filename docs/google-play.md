@@ -1,0 +1,57 @@
+# Gaffster on Google Play (stage 1: no purchases in the app)
+
+The Android app is gaffster.app packaged as a Trusted Web Activity (TWA): the app opens the website full screen in Chrome,
+with no address bar. All features come from the website, so every deploy updates the app too.
+
+Stage 1 sells nothing inside the app. People sign in with Whop and use any plan they already have. Google requires such an
+app to show no prices, buy buttons or prompts to buy elsewhere, so the site has an "app mode" (src/lib/appMode.ts) that
+hides them when it is opened from the app. Stage 2 will add Google Play Billing.
+
+## How the app turns app mode on
+
+The app must open **https://gaffster.app/board?app=android**. The `?app=android` part switches app mode on for that app
+session. Do not put it in public/manifest.webmanifest: that would also hide prices for people who add the website to
+their home screen from a browser.
+
+## 1. Build the app files (PWABuilder)
+
+1. Go to https://www.pwabuilder.com and enter `https://gaffster.app`.
+2. Choose **Package for stores**, then **Android**, then **Generate Package** with these options (Options / All settings):
+   - Package ID: `app.gaffster.twa` (this can never be changed once the app is on Google Play)
+   - App name: `Gaffster`; Launcher name: `Gaffster`
+   - Start URL: `/board?app=android`
+   - Display mode: Standalone. Status bar and navigation colour: `#0A1020`
+   - Signing key: **Create new**. Fill in your name and location.
+3. Download the zip. It contains:
+   - an `.aab` file: this is what you upload to Google Play;
+   - an `.apk` file: install this on your own phone to test;
+   - `signing.keystore` and `signing-key-info.txt`: **keep both safe and private** (password manager plus a backup
+     outside OneDrive). Without them you cannot publish updates;
+   - `assetlinks.json`: send its fingerprint (the long `sha256_cert_fingerprints` value) to Build.
+
+## 2. Test on your phone
+
+Copy the `.apk` to your Android phone and open it (allow "install unknown apps" for your file manager when asked).
+
+Until the fingerprint is in `public/.well-known/assetlinks.json` on the live site, the app shows a browser address bar
+at the top. That is expected. Once Build adds the fingerprint and the site is deployed, the bar disappears.
+
+Check: no prices or buy buttons anywhere, sign in with Whop works and comes back to the board, saved line-ups load (if
+your plan has them), and downloading and sharing an image works.
+
+## 3. Google Play Console
+
+1. Create the app in Play Console (name Gaffster, free app, app not game).
+2. Upload the `.aab` to the **Closed testing** track (personal accounts need at least 12 testers opted in for 14 days in
+   a row before production; see Google's "App testing requirements for new personal developer accounts").
+3. Google re-signs the app ("Play App Signing"). In Play Console go to **Test and release → App integrity → App signing**
+   and copy the **App signing key certificate SHA-256 fingerprint**. Send it to Build too: assetlinks.json needs both
+   fingerprints (yours from PWABuilder for the test `.apk`, and Google's for the Play version).
+4. Store listing: privacy policy URL `https://gaffster.app/privacy`; complete the Data safety form, content rating and
+   target audience (13+).
+
+## Known review risks
+
+- The Terms page lists plan prices and says Whop takes payments. It is reachable from the footer in the app. Legal pages
+  are usually acceptable, but a reviewer could object; if so, Build can hide the price table in app mode.
+- "Sign in with Whop" opens whop.com. If Whop's sign-in page shows anything for sale, a reviewer could object.

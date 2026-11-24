@@ -31,7 +31,7 @@ function Home() {
             </p>
             <div className="mt-7 flex gap-3 justify-center md:justify-start flex-wrap">
               <Link to="/board" className="btn btn-lime">Build your XI</Link>
-              <a href="#plans" className="btn btn-ghost">See plans</a>
+              <a href="#plans" className="btn btn-ghost app-hide">See plans</a>
             </div>
             <p className="mt-4 font-display text-xs tracking-widest text-[#A9B4D0]">2026/27 squads · all 20 clubs</p>
           </div>
@@ -51,7 +51,7 @@ function Home() {
           </div>
         </section>
 
-        <section id="plans" className="mx-auto max-w-[1100px] px-4 pb-16">
+        <section id="plans" className="mx-auto max-w-[1100px] px-4 pb-16 app-hide">
           <h2 className="font-display font-bold text-3xl mb-1">Start free. Upgrade for <span style={{ color: 'var(--boot-lime)' }}>clean images</span>.</h2>
           <p className="text-sm text-[#A9B4D0]">Build as much as you like. Your first image needs no sign-up, then 3 free images every week. Pick a plan for clean images in every size.</p>
           <Pricing />
