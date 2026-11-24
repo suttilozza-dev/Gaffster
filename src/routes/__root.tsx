@@ -6,6 +6,7 @@ import appCss from '../styles.css?url'
 import { SiteFooter } from '#/components/SiteFooter'
 import { ConsentBanner } from '#/components/ConsentBanner'
 import { CONSENT_HEAD_SCRIPT } from '#/lib/consent'
+import { APP_MODE_HEAD_SCRIPT } from '#/lib/appMode'
 
 
 export const Route = createRootRoute({
@@ -51,6 +52,8 @@ export const Route = createRootRoute({
     scripts: [
       // Must come before Whop's platform pixel script (which Whop adds at the end of <head>): see src/lib/consent.ts
       { children: CONSENT_HEAD_SCRIPT },
+      // Sets <html data-app> before the page is drawn when it runs inside the Google Play app: see src/lib/appMode.ts
+      { children: APP_MODE_HEAD_SCRIPT },
       {
         type: 'application/ld+json',
         children: JSON.stringify({
@@ -81,7 +84,7 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>

@@ -119,3 +119,8 @@ details.opt > summary::-webkit-details-marker { display: none; }
 details.opt > summary::before { content: '+'; font-family: 'Oswald', sans-serif; color: var(--boot-lime); width: 1rem; }
 details.opt[open] > summary::before { content: '–'; }
 .opt-sum { font-size: 0.75rem; color: #A9B4D0; text-transform: capitalize; }
+
+/* App mode (the Google Play app): see src/lib/appMode.ts */
+html[data-app] .app-hide { display: none !important; }
+.app-only { display: none; }
+html[data-app] .app-only { display: revert; }

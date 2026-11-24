@@ -60,7 +60,7 @@ const QA: { q: string; a: ReactNode }[] = [
 
 export function Faq() {
   return (
-    <section id="faq" className="mx-auto max-w-[1100px] px-4 pb-16" aria-labelledby="faq-title">
+    <section id="faq" className="mx-auto max-w-[1100px] px-4 pb-16 app-hide" aria-labelledby="faq-title">
       <h2 id="faq-title" className="font-display font-bold text-3xl mb-5">Questions</h2>
       <div className="flex flex-col gap-3 max-w-3xl">
         {QA.map(({ q, a }) => (

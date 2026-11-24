@@ -55,7 +55,7 @@ function useFounderSoldOut(): boolean | null {
 export function Pricing({ current }: { current?: Tier }) {
   const founderSoldOut = useFounderSoldOut()
   return (
-    <section aria-label="Plans" className="mt-6">
+    <section aria-label="Plans" className="mt-6 app-hide">
       <h2 className="font-display text-xl font-bold mb-3">Plans{current ? <span className="text-sm text-[#A9B4D0]"> · you are on {TIER_LABEL[current]}</span> : null}</h2>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Card
