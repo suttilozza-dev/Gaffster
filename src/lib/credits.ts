@@ -84,6 +84,13 @@ export function markAnonUsed() {
   } catch {
     /* ignore */
   }
+  // Add one to the server's daily total of free first images. Nothing identifying is sent or stored: no cookies
+  // (credentials: 'omit'), no body. Failures are ignored; the image has already been made.
+  try {
+    void fetch('/api/anon-image', { method: 'POST', credentials: 'omit', keepalive: true }).catch(() => {})
+  } catch {
+    /* ignore */
+  }
 }
 
 export type SpendResult = { ok: true; access: Access; anon?: boolean } | { ok: false; reason: 'signin' | 'used_up' | 'unavailable' }

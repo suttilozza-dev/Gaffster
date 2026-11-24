@@ -26,6 +26,12 @@ export function ensureSchema() {
     // bank dispute (access is paused while it is). Existing rows get variant_id NULL and disputed false.
     await q`ALTER TABLE grants ADD COLUMN IF NOT EXISTS variant_id text`
     await q`ALTER TABLE grants ADD COLUMN IF NOT EXISTS disputed boolean NOT NULL DEFAULT false`
+    // First free images made without signing in: one running total per UK day. Nothing that identifies a person or a
+    // browser is stored here (no user id, IP address, cookie or other identifier), only the date and the count.
+    await q`CREATE TABLE IF NOT EXISTS anon_images_day (
+      day text PRIMARY KEY,
+      images integer NOT NULL DEFAULT 0
+    )`
     // Saved line-ups (Plus, Creator and Founder). `data` is the board's own encoded line-up, the same format as a share link.
     await q`CREATE TABLE IF NOT EXISTS saved_lineups (
       id bigserial PRIMARY KEY,
@@ -188,4 +194,11 @@ export async function saveLineup(userId: string, name: string, gameweek: string,
 export async function deleteLineup(userId: string, id: number) {
   await ensureSchema()
   await sql()`DELETE FROM saved_lineups WHERE user_id = ${userId} AND id = ${id}`
+}
+
+/** Add one to today's count of free first images made without signing in (UK date). */
+export async function countAnonImage() {
+  await ensureSchema()
+  await sql()`INSERT INTO anon_images_day (day, images) VALUES (${dayKey()}, 1)
+    ON CONFLICT (day) DO UPDATE SET images = anon_images_day.images + 1`
 }
