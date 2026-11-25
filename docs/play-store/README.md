@@ -51,6 +51,13 @@ Gaffster is an independent fan tool. It is not affiliated with, endorsed by or c
 **Graphics:** app icon, feature graphic and the four phone screenshots from this folder. Tablet screenshots are optional;
 skip them for now.
 
+**Foldable screenshots** (optional), in `foldable/`, in Google's required shapes, showing the real app in app mode:
+`fold-1-square-unfolded.png` (1:1, unfolded), `fold-2-4x3-unfolded.png` (4:3, unfolded) and `fold-3-outer-portrait.png`
+(10:16, outer screen). Do not use logo graphics as screenshots: Google requires screenshots to show the app in use.
+
+**Logos as PNG** (for social posts and other uses, not for screenshot slots), in `logos/`: the icon-and-name lockup
+(`gaffster-lockup-1800x1720.png`, plus a 1080 square version) and the wordmark (`gaffster-wordmark-1816x640.png`).
+
 ---
 
 ## 2. Store settings (Grow users → Store presence → Store settings)
