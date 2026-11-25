@@ -35,6 +35,7 @@ their home screen from a browser.
 | --- | --- | --- |
 | Upload key (PWABuilder, 24 Nov 2026; CN=Laurence Sutcliffe, O=Gaffster, C=NZ) | `9E:1F:67:C7:13:51:E0:E3:69:50:9F:F8:CE:84:6F:46:08:BE:0C:93:FD:11:03:87:1C:26:79:90:DE:98:DE:09` | Yes |
 | Google Play app signing key (Play Console → Protected with Play → Play App Signing) | `F0:8D:0B:6F:5D:5A:01:4B:49:86:74:24:08:36:3C:FF:5C:AD:9C:C8:EB:0E:DE:9C:E6:00:53:10:FE:EC:6A:5C` | Yes (25 Nov 2026) |
+| Second certificate shown in Play Console (to be confirmed which) | `E9:3E:08:77:5A:30:76:47:18:7D:CD:90:18:3D:42:12:E0:61:2F:68:D3:C0:F7:6C:54:4F:6A:28:D8:8D:1B:68` | Yes (25 Nov 2026); remove once confirmed unneeded |
 
 ### Rebuilding the app (new icons, new version)
 
