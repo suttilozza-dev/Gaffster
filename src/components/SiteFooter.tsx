@@ -14,6 +14,8 @@ export function SiteFooter() {
         <Link to="/refunds" className={LINK}>Refunds</Link>
         <a href="mailto:lms.is@pm.me" className={LINK}>Contact</a>
         <button type="button" className={LINK} onClick={() => dispatchEvent(new Event(OPEN_SETTINGS_EVENT))}>Cookie settings</button>
+        {/* Only in the Android app, for Google Play's reviewers: see src/routes/review.tsx */}
+        <a href="/review" className={`${LINK} app-only`}>Reviewer sign-in</a>
       </nav>
       <p className="mt-3 text-xs text-[#A9B4D0]">gaffster.app</p>
     </footer>
