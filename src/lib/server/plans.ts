@@ -29,3 +29,12 @@ export const VARIANT_PLANS: Record<string, PlanGrant> = {
  * server only trusts the id from its own signed session cookie, which is set after a real "Sign in with Whop".
  */
 export const OWNER_USER_IDS: readonly string[] = ['user_TYrp3d73ORU7f']
+
+/**
+ * App store reviewers. Google Play's reviewers cannot create accounts or receive Whop's emailed sign-in codes, so they
+ * sign in at /review with the username REVIEWER_USERNAME and the REVIEW_PASSWORD secret (set with
+ * `whop apps secrets set --secret REVIEW_PASSWORD=...`; with no secret set, reviewer sign-in is switched off). That gives
+ * a session for this one built-in account, which gets everything without paying, like an owner account.
+ */
+export const REVIEWER_USERNAME = 'google-play-review'
+export const REVIEWER_USER_ID = 'review_google_play'

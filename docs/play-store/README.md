@@ -71,15 +71,31 @@ skip them for now.
 ### Ads
 **No, my app does not contain ads.**
 
-### App access
-Choose **All or some functionality in my app is restricted**, and add these instructions:
+### Sign-in details (was "App access")
+Google's reviewers cannot create accounts or receive Whop's emailed sign-in codes, so the app has a separate reviewer
+sign-in: **Reviewer sign-in** in the footer of the app (only shown inside the Android app), at `https://gaffster.app/review`.
+It signs in one built-in reviewer account that has every feature (Creator) without paying.
+
+Before filling this in, set the reviewer password on Whop hosting and deploy (it is switched off until the secret exists).
+Make up a long password (20+ characters, letters and numbers) and keep it in your password manager:
+
+```powershell
+whop apps secrets set --secret REVIEW_PASSWORD=your-long-password-here
+```
+
+Then in Play Console: **Is any part of your app restricted? → Yes → Add details**:
+
+- Name (the 0/60 field at the top): `Gaffster reviewer`
+- Username, email address or phone number: `google-play-review`
+- Password: the REVIEW_PASSWORD you set
+- Any other information required to access your app:
 
 ```
-Most of the app works without signing in: building line-ups, choosing formations, kits and stadium, and making the first image. More images, saved line-ups and some image options need a free or paid account, using "Sign in with Whop" at the top of the board.
+Most of Gaffster works without signing in (building line-ups and the first image). To unlock everything, scroll to the bottom of any page in the app and tap "Reviewer sign-in", then enter the username and password above. This signs in a reviewer account with every paid feature (no watermark, all image sizes, saved line-ups). Ordinary users sign in with "Sign in with Whop" at the top of the board; the reviewer sign-in avoids Whop's emailed codes.
 ```
 
-Google's reviewers may ask for a test login. If they do, create a separate Whop account for reviewers and send Build its
-Whop user ID; Build can give that one account full access without payment, so you never share your own login.
+- Tick **Sign-in details in this declaration provide full access to all the features and content within this app,
+  including premium or paid content**.
 
 ### Content rating (IARC questionnaire)
 - Email: `lms.is@pm.me`. Category: **All other app types**.

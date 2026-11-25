@@ -15,6 +15,7 @@ import { Route as BrandRouteImport } from './routes/brand'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RefundsRouteImport } from './routes/refunds'
+import { Route as ReviewRouteImport } from './routes/review'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ApiAccessRouteImport } from './routes/api/access'
 import { Route as ApiAnonImageRouteImport } from './routes/api/anon-image'
@@ -24,6 +25,7 @@ import { Route as ApiSpendRouteImport } from './routes/api/spend'
 import { Route as ApiAuthCallbackRouteImport } from './routes/api/auth/callback'
 import { Route as ApiAuthLoginRouteImport } from './routes/api/auth/login'
 import { Route as ApiAuthLogoutRouteImport } from './routes/api/auth/logout'
+import { Route as ApiAuthReviewRouteImport } from './routes/api/auth/review'
 import { Route as ApiWebhooksWhopRouteImport } from './routes/api/webhooks/whop'
 
 const IndexRoute = IndexRouteImport.update({
@@ -54,6 +56,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const RefundsRoute = RefundsRouteImport.update({
   id: '/refunds',
   path: '/refunds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewRoute = ReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -101,6 +108,11 @@ const ApiAuthLogoutRoute = ApiAuthLogoutRouteImport.update({
   path: '/api/auth/logout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthReviewRoute = ApiAuthReviewRouteImport.update({
+  id: '/api/auth/review',
+  path: '/api/auth/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiWebhooksWhopRoute = ApiWebhooksWhopRouteImport.update({
   id: '/api/webhooks/whop',
   path: '/api/webhooks/whop',
@@ -114,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/review': typeof ReviewRoute
   '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
   '/api/anon-image': typeof ApiAnonImageRoute
@@ -123,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
+  '/api/auth/review': typeof ApiAuthReviewRoute
   '/api/webhooks/whop': typeof ApiWebhooksWhopRoute
 }
 export interface FileRoutesByTo {
@@ -132,6 +146,7 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/review': typeof ReviewRoute
   '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
   '/api/anon-image': typeof ApiAnonImageRoute
@@ -141,6 +156,7 @@ export interface FileRoutesByTo {
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
+  '/api/auth/review': typeof ApiAuthReviewRoute
   '/api/webhooks/whop': typeof ApiWebhooksWhopRoute
 }
 export interface FileRoutesById {
@@ -151,6 +167,7 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/review': typeof ReviewRoute
   '/terms': typeof TermsRoute
   '/api/access': typeof ApiAccessRoute
   '/api/anon-image': typeof ApiAnonImageRoute
@@ -160,6 +177,7 @@ export interface FileRoutesById {
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
+  '/api/auth/review': typeof ApiAuthReviewRoute
   '/api/webhooks/whop': typeof ApiWebhooksWhopRoute
 }
 export interface FileRouteTypes {
@@ -171,6 +189,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/privacy'
     | '/refunds'
+    | '/review'
     | '/terms'
     | '/api/access'
     | '/api/anon-image'
@@ -180,6 +199,7 @@ export interface FileRouteTypes {
     | '/api/auth/callback'
     | '/api/auth/login'
     | '/api/auth/logout'
+    | '/api/auth/review'
     | '/api/webhooks/whop'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -189,6 +209,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/privacy'
     | '/refunds'
+    | '/review'
     | '/terms'
     | '/api/access'
     | '/api/anon-image'
@@ -198,6 +219,7 @@ export interface FileRouteTypes {
     | '/api/auth/callback'
     | '/api/auth/login'
     | '/api/auth/logout'
+    | '/api/auth/review'
     | '/api/webhooks/whop'
   id:
     | '__root__'
@@ -207,6 +229,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/privacy'
     | '/refunds'
+    | '/review'
     | '/terms'
     | '/api/access'
     | '/api/anon-image'
@@ -216,6 +239,7 @@ export interface FileRouteTypes {
     | '/api/auth/callback'
     | '/api/auth/login'
     | '/api/auth/logout'
+    | '/api/auth/review'
     | '/api/webhooks/whop'
   fileRoutesById: FileRoutesById
 }
@@ -226,6 +250,7 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundsRoute: typeof RefundsRoute
+  ReviewRoute: typeof ReviewRoute
   TermsRoute: typeof TermsRoute
   ApiAccessRoute: typeof ApiAccessRoute
   ApiAnonImageRoute: typeof ApiAnonImageRoute
@@ -235,6 +260,7 @@ export interface RootRouteChildren {
   ApiAuthCallbackRoute: typeof ApiAuthCallbackRoute
   ApiAuthLoginRoute: typeof ApiAuthLoginRoute
   ApiAuthLogoutRoute: typeof ApiAuthLogoutRoute
+  ApiAuthReviewRoute: typeof ApiAuthReviewRoute
   ApiWebhooksWhopRoute: typeof ApiWebhooksWhopRoute
 }
 
@@ -280,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/refunds'
       fullPath: '/refunds'
       preLoaderRoute: typeof RefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/review': {
+      id: '/review'
+      path: '/review'
+      fullPath: '/review'
+      preLoaderRoute: typeof ReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -345,6 +378,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthLogoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/auth/review': {
+      id: '/api/auth/review'
+      path: '/api/auth/review'
+      fullPath: '/api/auth/review'
+      preLoaderRoute: typeof ApiAuthReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/webhooks/whop': {
       id: '/api/webhooks/whop'
       path: '/api/webhooks/whop'
@@ -362,6 +402,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   PrivacyRoute: PrivacyRoute,
   RefundsRoute: RefundsRoute,
+  ReviewRoute: ReviewRoute,
   TermsRoute: TermsRoute,
   ApiAccessRoute: ApiAccessRoute,
   ApiAnonImageRoute: ApiAnonImageRoute,
@@ -371,6 +412,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAuthCallbackRoute: ApiAuthCallbackRoute,
   ApiAuthLoginRoute: ApiAuthLoginRoute,
   ApiAuthLogoutRoute: ApiAuthLogoutRoute,
+  ApiAuthReviewRoute: ApiAuthReviewRoute,
   ApiWebhooksWhopRoute: ApiWebhooksWhopRoute,
 }
 export const routeTree = rootRouteImport

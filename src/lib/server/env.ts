@@ -7,3 +7,8 @@ export function env(name: 'DATABASE_URL' | 'SESSION_SECRET' | 'WHOP_WEBHOOK_SECR
   if (!v) throw new Error(`Missing secret ${name}`)
   return v
 }
+
+/** An optional secret: undefined when it is not set. */
+export function optionalEnv(name: 'REVIEW_PASSWORD'): string | undefined {
+  return process.env[name] || undefined
+}
