@@ -36,9 +36,27 @@ their home screen from a browser.
 | Upload key (PWABuilder, 24 Nov 2026; CN=Laurence Sutcliffe, O=Gaffster, C=NZ) | `9E:1F:67:C7:13:51:E0:E3:69:50:9F:F8:CE:84:6F:46:08:BE:0C:93:FD:11:03:87:1C:26:79:90:DE:98:DE:09` | Yes |
 | Google Play app signing key (Play Console → App integrity) | not known yet | No: add it once the app is in Play Console |
 
+### Rebuilding the app (new icons, new version)
+
+The app's icon and name are built into the app file, so after changing them on the site, build a new package in
+PWABuilder. Use the same settings as before, plus:
+
+- Version: raise both numbers (for example version name `1.0.1`, version code `2`). Google Play refuses an upload whose
+  version code is not higher than the last one.
+- Signing key: **Use mine**. Upload `signing.keystore` and type the key alias and the two passwords from
+  `signing-key-info.txt`. Never choose "New" again: a new key gives a new fingerprint, and Google Play will refuse the
+  update.
+- Icon URL `https://gaffster.app/brand/icon-512.png`, maskable icon URL `https://gaffster.app/brand/icon-maskable-512.png`,
+  monochrome icon URL `https://gaffster.app/brand/icon-monochrome-512.png`.
+
 ## 2. Test on your phone
 
 Copy the `.apk` to your Android phone and open it (allow "install unknown apps" for your file manager when asked).
+
+If Android says the install is **blocked by Advanced Protection**, the phone has Android's Advanced Protection mode on,
+which stops all installs from outside Google Play. Rather than turning that protection off, test through Google Play
+instead: upload the `.aab` to the **Internal testing** track in Play Console, add your own Google account as a tester, and
+install from the opt-in link. Internal testing is available straight away and is not affected by the 12-tester rule.
 
 Until the fingerprint is in `public/.well-known/assetlinks.json` on the live site, the app shows a browser address bar
 at the top. That is expected. Once Build adds the fingerprint and the site is deployed, the bar disappears.

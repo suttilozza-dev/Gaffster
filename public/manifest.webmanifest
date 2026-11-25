@@ -1,17 +1,38 @@
 {
-  "name": "Gaffster",
+  "id": "/board",
+  "name": "Gaffster: football line-up maker",
   "short_name": "Gaffster",
-  "description": "Build and share predicted or dream Premier League line-ups on a tactical board.",
+  "description": "Pick your XI and share it before kick-off. Build predicted, starting or dream Premier League line-ups on a tactical board with 2026/27 squads for all 20 clubs, then download or share them as images.",
+  "lang": "en-GB",
+  "dir": "ltr",
   "start_url": "/board",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "any",
   "background_color": "#0A1020",
   "theme_color": "#0A1020",
-  "categories": ["sports", "entertainment"],
+  "categories": ["sports", "entertainment", "photo"],
+  "prefer_related_applications": false,
+  "related_applications": [
+    { "platform": "play", "id": "app.gaffster.twa", "url": "https://play.google.com/store/apps/details?id=app.gaffster.twa" }
+  ],
+  "launch_handler": { "client_mode": ["navigate-existing", "auto"] },
+  "edge_side_panel": { "preferred_width": 480 },
   "icons": [
     { "src": "/brand/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/brand/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/brand/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/brand/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/brand/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/brand/icon-monochrome-512.png", "sizes": "512x512", "type": "image/png", "purpose": "monochrome" }
+  ],
+  "screenshots": [
+    { "src": "/screenshots/board-phone.webp", "sizes": "1080x1920", "type": "image/webp", "form_factor": "narrow", "label": "A Manchester United 4-2-3-1 on the tactical board" },
+    { "src": "/screenshots/home-phone.webp", "sizes": "1080x1920", "type": "image/webp", "form_factor": "narrow", "label": "Pick your XI. Share it before kick-off" },
+    { "src": "/screenshots/board-wide.webp", "sizes": "1920x1080", "type": "image/webp", "form_factor": "wide", "label": "The tactical board with the squad list on a wide screen" }
+  ],
+  "shortcuts": [
+    { "name": "New line-up", "short_name": "New", "description": "Start a fresh line-up on the board", "url": "/board?new=1", "icons": [{ "src": "/brand/shortcut-new-96.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "Last line-up", "short_name": "Board", "description": "Carry on with the line-up you were building", "url": "/board", "icons": [{ "src": "/brand/shortcut-board-96.png", "sizes": "96x96", "type": "image/png" }] }
   ]
 }
