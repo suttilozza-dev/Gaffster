@@ -141,10 +141,18 @@ export default function Board() {
 
   // Restore, in this order: a share link, the line-up from before "Sign in with Whop", then the last line-up this browser
   // remembers (with the gameweek moved on to the current one). Phones with nothing to restore default to the portrait pitch.
+  const freshStart = useRef<boolean | null>(null)
   useEffect(() => {
     let raw = location.hash.length >= 8 ? location.hash.slice(1) : ''
     let remembered = false
-    if (!raw) {
+    // "New line-up" (the app shortcut opens /board?new=1): start from the default board, ignoring the remembered one.
+    // Kept in a ref so it still holds if this effect runs twice (React's development mode does that).
+    if (freshStart.current === null) {
+      freshStart.current = new URLSearchParams(location.search).has('new')
+      if (freshStart.current) history.replaceState(history.state, '', location.pathname + location.hash)
+    }
+    const fresh = freshStart.current
+    if (!raw && !fresh) {
       try {
         raw = sessionStorage.getItem('mdxi_resume') ?? ''
         sessionStorage.removeItem('mdxi_resume')
@@ -152,7 +160,7 @@ export default function Board() {
         /* storage blocked: start fresh */
       }
     }
-    if (!raw) {
+    if (!raw && !fresh) {
       try {
         raw = localStorage.getItem(LINEUP_KEY) ?? ''
         remembered = !!raw

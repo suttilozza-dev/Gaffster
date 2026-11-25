@@ -1,6 +1,6 @@
 # Cookies
 
-Last updated: 17 November 2026
+Last updated: 25 November 2026
 
 ## The short version
 
@@ -18,6 +18,7 @@ Whop, which hosts the site, can also set measurement cookies to count visits and
 | mdxi_resume | Browser storage (this tab only) | Holds your line-up while you sign in, so you do not lose it. | Removed when you return, or when you close the tab |
 | tsr-scroll-restoration-v1_3 | Browser storage (this tab only) | Remembers where you had scrolled to on a page. | Until you close the tab |
 | mdxi_lineup | Browser storage | Remembers the last line-up you built, so it is still there when you come back. | Until you clear your browser storage |
+| gaffster-offline | Browser storage (cache) | Keeps a copy of the "You're offline" page and its icon, shown if you lose your connection. | Until a newer version replaces it, or you clear the site's data |
 | mdxi_consent | Browser storage | Remembers whether you agreed to measurement cookies. | Until you clear your browser storage |
 | __cf_bm | Cookie | Helps protect the site from bots. Set by Cloudflare, which Whop uses to serve the site. | 30 minutes |
 

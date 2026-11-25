@@ -54,6 +54,8 @@ export const Route = createRootRoute({
       { children: CONSENT_HEAD_SCRIPT },
       // Sets <html data-app> before the page is drawn when it runs inside the Google Play app: see src/lib/appMode.ts
       { children: APP_MODE_HEAD_SCRIPT },
+      // Service worker: shows /offline.html when there is no connection, nothing else (public/sw.js)
+      { children: "if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})})}" },
       {
         type: 'application/ld+json',
         children: JSON.stringify({

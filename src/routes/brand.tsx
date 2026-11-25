@@ -53,7 +53,7 @@ function Brand() {
       <div className="panel p-4 mb-8 flex items-center gap-5 flex-wrap">
         <img src="/brand/ball-cream.png" alt="Approved ball mark, cream" width={72} height={72} />
         <img src="/brand/ball-ink.png" alt="Approved ball mark, ink outline" width={72} height={72} style={{ background: '#F5F7FF', borderRadius: 8, padding: 6 }} />
-        <div className="text-sm text-[#A9B4D0] max-w-md">Approved ball mark. Used as the browser tab and app icon. Keep clear space equal to its height, and do not recolour it into a club's colours.</div>
+        <div className="text-sm text-[#A9B4D0] max-w-md">Approved ball mark. Keep clear space equal to its height, and do not recolour it into a club's colours. The browser tab, home screen and Android app icons use the 03B Line Shirt symbol on the Night background.</div>
       </div>
       <Group title="Main logos" note="Header and hero: 02 Pitch Monogram and 03B Line Shirt." ids={LOGO_ROLES.main} />
       <Group title="Secondary logos" note="Badges, empty states and smaller spots." ids={LOGO_ROLES.secondary} />
